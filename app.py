@@ -27,8 +27,9 @@ def index():
         extra = request.form.get('extra', '').strip()
 
         # Combine user input into a structured prompt
-        prompt = f"Write a short story aim at children \
+        prompt = f"Write a short story aimed at children \
             from 6 years old to 10 years old, \
+            using simple and appropriate language, \
             about a {character} in a {setting} \
             who is feeling {feeling}. {extra}. \
             Make sure that the story is appropriate for children \
