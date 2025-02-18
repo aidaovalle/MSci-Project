@@ -13,13 +13,14 @@
 #     app.run(host='127.0.0.1', port=8080)
 
 from flask import Flask, render_template, request, jsonify
-from llm_handler import generate_content
+from llm_handler import generate_story, load_stories
 
 app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
+        # Get user input
         character = request.form.get('character', '').strip()
         setting = request.form.get('setting', '').strip()
         feeling = request.form.get('feeling', '').strip()
@@ -34,13 +35,16 @@ def index():
             and that there is a moral of the story, \
             from which the child can learn and develop emotionally. \
             This story is a fable so it will not include humans."
-
-        # Call LLM (Google Gemini)
-        story = generate_content(prompt)
+        
+        # Generate story (llm_handler.py handles storage)
+        story = generate_story(prompt)
         
         return jsonify({'message': 'Story generated', 'story': story})
-        #return jsonify({'message': 'Prompt generated', 'prompt': prompt})
     
-    return render_template('index.html')
+    # Load past stories to display on the page
+    past_stories = load_stories()
+    
+    return render_template("index.html", past_stories=past_stories)
+    
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8080)

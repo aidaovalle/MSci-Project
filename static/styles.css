@@ -1,3 +1,31 @@
+#storyResult, .story-entry {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: left; /* Align text to the left for better readability */
+    width: 100%; /* Ensure it takes full width of the container */
+}
+
+.hidden {
+    display: none;
+}
+
+#loading {
+    font-weight: bold;
+    color: #007bff;
+    margin-top: 10px;
+}
+
+.story-entry {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: white;
+}
+
 body {
     font-family: Arial, sans-serif;
     background-color: #f8f8f8;
@@ -13,7 +41,8 @@ body {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    width: 300px;
+    width: 80%; /* Increased width for better readability */
+    max-width: 900px; /* Prevents it from becoming too wide */
     text-align: center;
 }
 
@@ -36,6 +65,7 @@ input, textarea {
     margin-top: 5px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    width: 100%;
 }
 
 button {

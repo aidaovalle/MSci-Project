@@ -26,36 +26,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Story Creator</title>
+    <title>Story Generator</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <div class="container">
-        <h2>Create Your Story (Prompt)</h2>
+        <h2>Generate a Story</h2>
         <form id="storyForm">
             <label for="character">What character would you like?</label>
-            <input type="text" id="character" name="character" placeholder="Squirrel, Mouse, Dog..." required>
+            <input type="text" id="character" name="character" required>
 
             <label for="setting">Where should the story take place?</label>
-            <input type="text" id="setting" name="setting" placeholder="Forest, Mountain, Beach..." required>
+            <input type="text" id="setting" name="setting" required>
 
             <label for="feeling">How are you feeling?</label>
-            <input type="text" id="feeling" name="feeling" placeholder="Happy, Scared, Homesick..." required>
+            <input type="text" id="feeling" name="feeling" required>
 
             <label for="extra">Anything else for your story?</label>
-            <textarea id="extra" name="extra" placeholder="Make it similar to X story, I want dragons as enemies, Name the animal ‘Gary’..."></textarea>
+            <textarea id="extra" name="extra"></textarea>
 
-            <button type="submit">Generate Prompt</button>
+            <button type="submit">Generate Story</button>
         </form>
 
-        <h3>Generated Prompt:</h3>
-        <p id="generatedPrompt"></p>
+        <div id="loading" style="display: none;">Generating story...</div>
+
+        <div id="storyResult" class="hidden">
+            <h3>Your Generated Story:</h3>
+            <p id="storyText"></p>
+        </div>
+
+        <h2>Past Generated Stories</h2>
+        <div id="pastStories">
+            {% for story in past_stories %}
+                <div class="story-entry">
+                    <strong>Prompt:</strong> {{ story.prompt }}<br>
+                    <strong>Story:</strong> {{ story.story }}
+                </div>
+            {% endfor %}
+        </div>
     </div>
 
     <script>
-        document.getElementById('storyForm').addEventListener('submit', function(event) {
+        document.getElementById("storyForm").addEventListener("submit", function(event) {
             event.preventDefault();
+            
             const formData = new FormData(this);
+            document.getElementById("loading").style.display = "block";
+            document.getElementById("storyResult").classList.add("hidden");
 
             fetch("/", {
                 method: "POST",
@@ -63,10 +80,24 @@
             })
             .then(response => response.json())
             .then(data => {
-                document.getElementById("generatedPrompt").textContent = data.prompt;
+                document.getElementById("loading").style.display = "none";
+                document.getElementById("storyResult").classList.remove("hidden");
+                document.getElementById("storyText").textContent = data.story;
+                
+                // Add new story to the past stories section
+                let pastStoriesDiv = document.getElementById("pastStories");
+                let newStory = document.createElement("div");
+                newStory.classList.add("story-entry");
+                newStory.innerHTML = `<strong>Prompt:</strong> ${formData.get("character")}, ${formData.get("setting")}, ${formData.get("feeling")}, ${formData.get("extra")}<br>
+                                      <strong>Story:</strong> ${data.story}`;
+                pastStoriesDiv.prepend(newStory);
             })
-            .catch(error => console.error("Error:", error));
+            .catch(error => {
+                document.getElementById("loading").style.display = "none";
+                alert("Error generating story: " + error);
+            });
         });
     </script>
 </body>
 </html>
+
