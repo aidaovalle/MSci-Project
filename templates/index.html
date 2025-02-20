@@ -25,58 +25,20 @@
             <textarea id="extra" name="extra"></textarea>
 
             <button type="submit">Generate Story</button>
-            <sl-button>Button</sl-button>
         </form>
-
         <div id="loading" style="display: none;">Generating story...</div>
-
+    </div>
+<!-- 
+    <div id="storyContainer">
+        <h2>Your Personalised Story:</h3>
         <div id="storyResult" class="hidden">
-            <h3>Your Personalised Story:</h3>
             <p id="storyText"></p>
         </div>
-
         <h2>Past Generated Stories:</h2>
-        <div id="pastStories">
-            {% for story in past_stories %}
-                <div class="story-entry">
-                    <strong>Prompt:</strong> {{ story.prompt }}<br>
-                    <strong>Story:</strong> {{ story.story }}<br>
-                </div>
-            {% endfor %}
-        </div>
+        <div id="pastStories"></div>
     </div>
+     -->
 
-    <script>
-        document.getElementById("storyForm").addEventListener("submit", function(event) {
-            event.preventDefault();
-            
-            const formData = new FormData(this);
-            document.getElementById("loading").style.display = "block";
-            document.getElementById("storyResult").classList.add("hidden");
-
-            fetch("/", {
-                method: "POST",
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById("loading").style.display = "none";
-                document.getElementById("storyResult").classList.remove("hidden");
-                document.getElementById("storyText").textContent = data.story;
-                
-                // Add new story to the past stories section
-                let pastStoriesDiv = document.getElementById("pastStories");
-                let newStory = document.createElement("div");
-                newStory.classList.add("story-entry");
-                newStory.innerHTML = `<strong>Prompt:</strong> ${formData.get("character")}, ${formData.get("setting")}, ${formData.get("feeling")}, ${formData.get("extra")}<br>
-                                      <strong>Story:</strong> ${data.story}`;
-                pastStoriesDiv.prepend(newStory);
-            })
-            .catch(error => {
-                document.getElementById("loading").style.display = "none";
-                alert("Error generating story: " + error);
-            });
-        });
-    </script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

@@ -26,26 +26,22 @@ def index():
     # -------------------------------------------------------------------------------------
        
         # Combine user input into a structured prompt
-        prompt = f"Write a short story aimed at children \
-            from 6 years old to 10 years old, \
-            using simple and appropriate language, \
-            about a {character} in a {setting} \
-            who is feeling {feeling}. {extra}. \
-            Make sure that the story is appropriate for children \
-            and that there is a moral of the story, \
-            from which the child can learn and develop emotionally. \
-            End the story with the moral.\
-            This story is a fable so it will not include humans."
-        
+        prompt = f"Write a fable for children (ages 6-10) using simple language. \
+          The main character is a {character} in a {setting}, feeling {feeling}. {extra}. \
+          The story should be engaging, appropriate and contain a moral in concept. \
+          Do not include human characters. \
+          Do not include a separate section called 'Moral of the Story'. \
+          Do not label any part of the story explicitly."
+                
         # Generate story (llm_handler.py handles storage)
         story = generate_story(prompt)
         
         return jsonify({'message': 'Story generated', 'story': story})
     
-    # Load past stories to display on the page
-    past_stories = load_stories()
+    # # Load past stories to display on the page
+    # past_stories = load_stories()
     
-    return render_template("index.html", past_stories=past_stories)
+    return render_template("index.html")
     
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8080)

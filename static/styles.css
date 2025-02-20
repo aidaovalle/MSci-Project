@@ -1,39 +1,21 @@
 #storyResult, .story-entry {
-    margin-top: 20px;
+    text-align: left;
+    word-wrap: break-word;
     padding: 15px;
     background: #f9f9f9;
     border: 1px solid #ddd;
     border-radius: 8px;
-    text-align: left; /* Align text to the left for better readability */
-    width: 100%; /* Ensure it takes full width of the container */
-}
-
-.hidden {
-    display: none;
-}
-
-#loading {
-    font-weight: bold;
-    color: #007bff;
     margin-top: 10px;
-}
-
-.story-entry {
-    margin-top: 10px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: white;
 }
 
 body {
     font-family: Arial, sans-serif;
     background-color: #f8f8f8;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    height: 100vh;
     margin: 0;
+    padding: 20px;
 }
 
 .container {
@@ -41,10 +23,22 @@ body {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    width: 80%; /* Increased width for better readability */
-    height: 70%;
-    max-width: 900px; /* Prevents it from becoming too wide */
+    width: 90%;
+    max-width: 800px; 
     text-align: center;
+    margin-bottom: 20px;
+}
+
+#storyContainer {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 900px;
+    min-height: 200px;
+    overflow-y: auto; 
+    text-align: left;
 }
 
 h2 {

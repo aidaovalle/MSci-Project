@@ -29,9 +29,9 @@ def load_stories():
     except (FileNotFoundError, json.JSONDecodeError):
         return []
     
-def save_story(prompt, output):
+def save_story(prompt, story):
     stories = load_stories()
-    stories.insert(0, {"prompt": prompt, "story": output})  # Newest at the top
+    stories.insert(0, {"prompt": prompt, "story": story})  # Newest at the top
     with open(STORIES_FILE, "w") as file:
         json.dump(stories, file, indent=4)
 
