@@ -1,33 +1,12 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <link rel="stylesheet" type= "text/css" href= "{{ url_for('static', filename='styles.css') }}">
-    <title>Simple Form</title>
-</head>
-<body>
-    <h1>Simple Form</h1>
-    <form action="/submit" method="post">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required><br><br>
-        
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required><br><br>
-        
-        <input type="submit" value="Submit">
-    </form>
-</body>
-</html> -->
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Story Generator</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.0/cdn/themes/light.css" />
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.0/cdn/shoelace-autoloader.js"></script>
 </head>
 <body>
     <div class="container">
@@ -46,24 +25,22 @@
             <textarea id="extra" name="extra"></textarea>
 
             <button type="submit">Generate Story</button>
+            <sl-button>Button</sl-button>
         </form>
 
         <div id="loading" style="display: none;">Generating story...</div>
 
         <div id="storyResult" class="hidden">
-            <h3>Your Generated Story:</h3>
+            <h3>Your Personalised Story:</h3>
             <p id="storyText"></p>
-            <h4>Moral of the Story:</h4>
-            <p id="storyMoral"></p>
         </div>
 
-        <h2>Past Generated Stories</h2>
+        <h2>Past Generated Stories:</h2>
         <div id="pastStories">
             {% for story in past_stories %}
                 <div class="story-entry">
                     <strong>Prompt:</strong> {{ story.prompt }}<br>
                     <strong>Story:</strong> {{ story.story }}<br>
-                    <strong>Moral:</strong> {{ story.moral }}
                 </div>
             {% endfor %}
         </div>
@@ -86,15 +63,13 @@
                 document.getElementById("loading").style.display = "none";
                 document.getElementById("storyResult").classList.remove("hidden");
                 document.getElementById("storyText").textContent = data.story;
-                document.getElementById("storyMoral").textContent = data.moral;
                 
                 // Add new story to the past stories section
                 let pastStoriesDiv = document.getElementById("pastStories");
                 let newStory = document.createElement("div");
                 newStory.classList.add("story-entry");
                 newStory.innerHTML = `<strong>Prompt:</strong> ${formData.get("character")}, ${formData.get("setting")}, ${formData.get("feeling")}, ${formData.get("extra")}<br>
-                                      <strong>Story:</strong> ${data.story}<br>
-                                      <strong>Moral:</strong> ${data.moral}`;
+                                      <strong>Story:</strong> ${data.story}`;
                 pastStoriesDiv.prepend(newStory);
             })
             .catch(error => {
