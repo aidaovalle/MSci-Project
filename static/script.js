@@ -18,7 +18,7 @@ document.getElementById("storyForm").addEventListener("submit", function(event) 
         // Add new story to the past stories section
         let pastStoriesDiv = document.getElementById("pastStories");
         let newStory = document.createElement("div");
-        newStory.classList.add("story-entry");
+        newStory.classList.add("story-entry"); //thiw is the prompt that appears in thw generated story
         newStory.innerHTML = `<strong>Prompt:</strong> ${formData.get("character")}, ${formData.get("setting")}, ${formData.get("feeling")}, ${formData.get("extra")}<br>
                                 <strong>Story:</strong> ${data.story}`;
         pastStoriesDiv.prepend(newStory);
