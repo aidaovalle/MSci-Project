@@ -11,20 +11,7 @@ def index():
         setting = request.form.get('setting', '').strip()
         feeling = request.form.get('feeling', '').strip()
         extra = request.form.get('extra', '').strip()
-
-    # ----------------SEPARATION OF STORY AND MORAL-----------------------------------------
-        
-    #     # Generate story & moral
-    #     story, moral = generate_story(character, setting, feeling, extra)
-
-    #     return jsonify({'message': 'Story generated', 'story': story, 'moral': moral})
-    
-    # # Load past stories
-    # past_stories = load_stories()
-    # return render_template("index.html", past_stories=past_stories)
-    
-    # -------------------------------------------------------------------------------------
-       
+               
         # Combine user input into a structured prompt
         prompt = f"Write a fable for children (ages 6-10) using simple language. \
           The main character is a {character} in a {setting}, feeling {feeling}. {extra}. \
@@ -38,10 +25,9 @@ def index():
         
         return jsonify({'message': 'Story generated', 'story': story})
     
-    # # Load past stories to display on the page
-    # past_stories = load_stories()
-    
-    return render_template("index.html")
+    # Load past stories to display on the page
+    past_stories = load_stories()
+    return render_template("index.html", past_stories=past_stories)
     
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8080)

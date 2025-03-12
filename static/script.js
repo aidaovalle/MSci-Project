@@ -3,7 +3,7 @@ document.getElementById("storyForm").addEventListener("submit", function(event) 
     
     const formData = new FormData(this);
     document.getElementById("loading").style.display = "block";
-    document.getElementById("storyResult").classList.add("hidden");
+    //document.getElementById("storyResult").classList.add("hidden");
 
     fetch("/", {
         method: "POST",

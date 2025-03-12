@@ -1,23 +1,23 @@
-#import os
-#from dotenv import load_dotenv
+import os
+from dotenv import load_dotenv
 import json
 from google import genai
 
 # ----------------HIDING API KEY AND LOADING IT AUTOMATICALLY--------------------
 
-# # Load API keys from .env file
-# load_dotenv()
-# GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+# Load API keys from .env file
+load_dotenv()
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
-# if not GEMINI_API_KEY:
-#     raise ValueError("API Key not found.")
+if not GEMINI_API_KEY:
+    raise ValueError("API Key not found.")
 
-# # Initialize Gemini client
-# client = genai.Client(api_key=GEMINI_API_KEY)
+# Initialize Gemini client
+client = genai.Client(api_key=GEMINI_API_KEY)
 
 # -------------------------------------------------------------------------------
 
-client = genai.Client(api_key="AIzaSyDhzCdH6IoKnac3m_kNlIOOVesotaNyrcc")
+#learclient = genai.Client(api_key="AIzaSyDhzCdH6IoKnac3m_kNlIOOVesotaNyrcc")
 
 STORIES_FILE = "stories.json"  # File to store past prompts and stories
 
