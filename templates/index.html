@@ -5,17 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Story Generator</title>
 
-     <!-- Tailwind CSS for modern styling -->
+     <!-- Tailwind CSS -->
      <script src="https://cdn.tailwindcss.com"></script>
-     <!-- Google Font for better typography -->
+
+     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
     <!-- Shoelace UI Framework -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.0/cdn/themes/light.css" />
     <script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.0/cdn/shoelace-autoloader.js"></script>
     
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"> -->
-
     <style>
         body {
             font-family: 'Lexend', sans-serif;
@@ -26,49 +25,67 @@
 </head>
 
 <body class="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-    <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-2xl">
-        <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Generate a Story</h2>
+
+    <sl-tab-group>
+        <sl-tab slot="nav" panel="input-form">Story Generator</sl-tab>
+        <sl-tab slot="nav" panel="generated-story">Generated Story</sl-tab>
+        <sl-tab slot="nav" panel="past-stories">Past Stories</sl-tab>
+
+        <sl-tab-panel name="input-form">
+            <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-2xl">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Generate a Story</h2>
+                
+                <form id="storyForm" class="space-y-4">
+                    <label class="block">
+                        <span class="text-gray-700 font-medium">What character would you like?</span>
+                        <sl-input type="text" id="character" name="character" required></sl-input>
+                    </label>
         
-        <form id="storyForm" class="space-y-4">
-            <label class="block">
-                <span class="text-gray-700 font-medium">What character would you like?</span>
-                <sl-input type="text" id="character" name="character" required></sl-input>
-            </label>
- 
-            <label class="block">
-                <span class="text-gray-700 font-medium">Where should the story take place?</span>
-                <sl-input type="text" id="setting" name="setting" required></sl-input>
-            </label>
+                    <label class="block">
+                        <span class="text-gray-700 font-medium">Where should the story take place?</span>
+                        <sl-input type="text" id="setting" name="setting" required></sl-input>
+                    </label>
 
-            <label class="block">
-                <span class="text-gray-700 font-medium">How are you feeling?</span>
-                <sl-input type="text" id="feeling" name="feeling" required></sl-input>
-            </label>
+                    <label class="block">
+                        <span class="text-gray-700 font-medium">How are you feeling?</span>
+                        <sl-input type="text" id="feeling" name="feeling" required></sl-input>
+                    </label>
 
-            <label class="block">
-                <span class="text-gray-700 font-medium">Anything else for your story?</span>
-                <sl-textarea id="extra" name="extra"></sl-textarea>
-            </label>
+                    <label class="block">
+                        <span class="text-gray-700 font-medium">Anything else for your story?</span>
+                        <sl-textarea id="extra" name="extra"></sl-textarea>
+                    </label>
 
-            <sl-button type="submit" variant="primary" class="w-full">Generate Story</sl-button>
-        </form>
+                    <sl-button type="submit" variant="primary" class="w-full">Generate Story</sl-button>
+                </form>
 
-        <div id="loading" class="text-center text-gray-600 mt-4 hidden">
-            <sl-spinner></sl-spinner> Generating story...
-        </div>
+                <div id="loading" class="text-center text-gray-600 mt-4 hidden">
+                    <sl-spinner></sl-spinner> Generating story...
+                </div>
 
-    </div>
+            </div>
+        </sl-tab-panel>
 
     <!-- Story Display Section -->
-    <div id="storyContainer" class="bg-white shadow-lg rounded-lg p-6 w-full max-w-2xl mt-6 hidden">
-        <h2 class="text-2xl font-semibold text-gray-800">Your Personalised Story:</h2>
-        <div id="storyResult" class="bg-gray-50 p-4 mt-3 rounded-lg shadow-sm">
-            <p id="storyText" class="text-gray-700"></p>
-        </div>
+        <sl-tab-panel name="generated-story">
+            <div id="storyContainer" class="bg-white shadow-lg rounded-lg p-6 w-full max-w-2xl mt-6 hidden">
+                <h2 class="text-2xl font-semibold text-gray-800">Your Personalised Story:</h2>
+                <div id="storyResult" class="bg-gray-50 p-4 mt-3 rounded-lg shadow-sm">
+                    <p id="storyText" class="text-gray-700"></p>
+                </div>
+            </div> 
+        </sl-tab-panel>
 
-        <h2 class="text-2xl font-semibold text-gray-800 mt-6">Past Generated Stories:</h2>
-        <div id="pastStories" class="space-y-4 mt-3"></div>
-    </div> 
+        <sl-tab-panel name="past-stories">
+            <div class="max-w-3xl mx-auto bg-white p-6 shadow-lg rounded-lg mt-6">
+                <h2 class="text-2xl font-semibold text-gray-800">Past Generated Stories</h2>
+                <div id="pastStories" class="space-y-4 mt-3">
+                    <!-- Stories here -->
+                </div>
+            </div>
+        </sl-tab-panel>
+
+    </sl-tab-group>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
