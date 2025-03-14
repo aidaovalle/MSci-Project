@@ -15,39 +15,40 @@ document.getElementById("storyForm").addEventListener("submit", function(event) 
     const formData = new FormData(this);
     document.getElementById("loading").style.display = "block";
 
-    fetch("/", {
-        method: "POST",
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        document.getElementById("loading").style.display = "none";
-        document.getElementById("storyContainer").classList.remove("hidden");
-        
-        // Check that the storyText element exists        
-        const storyTextElement = document.getElementById("storyText");
-        if (storyTextElement) {
-            storyTextElement.textContent = data.story;
-        }
+    fetch("/generate", { method: "POST", body: formData })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("loading").style.display = "none";
+            document.getElementById("storyContainer").classList.remove("hidden");
+            document.getElementById("storyText").textContent = data.story;
 
-        // Add new story to the past stories section
-        let pastStoriesDiv = document.getElementById("pastStories");
-        if (pastStoriesDiv) {
-            let newStory = document.createElement("div");
-            newStory.classList.add("bg-gray-50", "p-4", "rounded-lg", "shadow-md", "mt-2");
-            // newStory.classList.add("story-entry"); //this is the prompt that appears in the generated story
-
-            newStory.innerHTML = `<p class="text-gray-700"><strong>Prompt:</strong> ${formData.get("character")}, 
-                                  ${formData.get("setting")}, ${formData.get("feeling")}, ${formData.get("extra")}</p>
-                                  <p class="mt-2"><strong>Story:</strong> ${data.story}</p>`;
-
-            // newStory.innerHTML = `<strong>Prompt:</strong> ${formData.get("character")}, ${formData.get("setting")}, ${formData.get("feeling")}, ${formData.get("extra")}<br>
-            //                     <strong>Story:</strong> ${data.story}`;
-            pastStoriesDiv.prepend(newStory);
-        }
-    })
-    .catch(error => {
-        document.getElementById("loading").style.display = "none";
-        alert("Error generating story: " + error);
-    });
+            loadPastStories();
+        })
+        .catch(error => {
+            document.getElementById("loading").style.display = "none";
+            alert("Error generating story: " + error);
+        });
 });
+
+    function loadPastStories() {
+        fetch("/get-stories")
+            .then(response => response.json())
+            .then(stories => {
+                let pastStoriesDiv = document.getElementById("pastStories");
+                pastStoriesDiv.innerHTML = ""; // Clear previous
+                stories.forEach(story => {
+                    let storyElement = document.createElement("div");
+                   
+                    storyElement.classList.add("bg-gray-50", "p-4", "rounded-lg", "shadow-md", "mt-2");
+                    
+                    storyElement.innerHTML = `
+                    <p><strong>Prompt:</strong> ${story.prompt}</p>
+                    <p class="mt-2"><strong>Story:</strong> ${story.story}</p>
+                    `;
+                    pastStoriesDiv.appendChild(storyElement);
+                });
+            });
+    }
+    
+    // Load past stories on page load
+    window.onload = loadPastStories;
