@@ -28,6 +28,11 @@ def index():
     # Load past stories to display on the page
     past_stories = load_stories()
     return render_template("index.html", past_stories=past_stories)
+
+# @app.route("/get-stories", methods=["GET"])
+# def get_stories():
+#     return jsonify(load_stories())  # Send past stories in the section
+
     
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8080)

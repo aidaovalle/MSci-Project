@@ -37,22 +37,41 @@
                 
                 <form id="storyForm" class="space-y-4">
                     <label class="block">
-                        <span class="text-gray-700 font-medium">What character would you like?</span>
+                        <span class="text-gray-700 font-medium">
+                            What character would you like?
+                            <sl-tooltip content="Choose an animal or magical creature for your story.">
+                                <sl-icon name="info-circle" style="color: gray;"></sl-icon>
+                            </sl-tooltip>
+                        </span>
                         <sl-input type="text" id="character" name="character" required></sl-input>
                     </label>
         
                     <label class="block">
-                        <span class="text-gray-700 font-medium">Where should the story take place?</span>
+                        <span class="text-gray-700 font-medium">
+                            Where should the story take place?
+                            <sl-tooltip content="Pick a location like a forest, castle, or park.">
+                                <sl-icon name="info-circle" style="color: gray;"></sl-icon>
+                            </sl-tooltip>
+                        </span>
                         <sl-input type="text" id="setting" name="setting" required></sl-input>
                     </label>
 
                     <label class="block">
-                        <span class="text-gray-700 font-medium">How are you feeling?</span>
+                        <span class="text-gray-700 font-medium">
+                            How are you feeling?
+                            <sl-tooltip content="How does the main character feel? Nervous, lonely, excited?">
+                                <sl-icon name="info-circle" style="color: gray;"></sl-icon>
+                            </sl-tooltip>
+                        </span>
                         <sl-input type="text" id="feeling" name="feeling" required></sl-input>
                     </label>
 
                     <label class="block">
-                        <span class="text-gray-700 font-medium">Anything else for your story?</span>
+                        <span class="text-gray-700 font-medium">
+                            Anything else for your story?<sl-tooltip content="The character's name, any special characteristics or whatever you don't want happening in the story.">
+                                <sl-icon name="info-circle" style="color: gray;"></sl-icon>
+                            </sl-tooltip>
+                        </span>
                         <sl-textarea id="extra" name="extra"></sl-textarea>
                     </label>
 
