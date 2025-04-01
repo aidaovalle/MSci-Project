@@ -42,8 +42,8 @@ document.getElementById("storyForm").addEventListener("submit", function(event) 
                     storyElement.classList.add("bg-gray-50", "p-4", "rounded-lg", "shadow-md", "mt-2");
                     
                     storyElement.innerHTML = `
-                    <p><strong>Prompt:</strong> ${story.prompt}</p>
-                    <p class="mt-2"><strong>Story:</strong> ${story.story}</p>
+                    <p><strong>Story Details:</strong><br>${story.prompt.replace(/\n/g, "<br>")}</p>
+                    <p class="mt-2"><strong>Story:</strong><br>${story.story}</p>
                     `;
                     pastStoriesDiv.appendChild(storyElement);
                 });

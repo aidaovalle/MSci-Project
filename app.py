@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-from llm_handler import generate_story, load_stories
+from llm_handler import generate_story, load_stories, generate_prompt
 
 app = Flask(__name__)
 
@@ -16,15 +16,20 @@ def generate():
     setting = request.form.get('setting', '').strip()
     feeling = request.form.get('feeling', '').strip()
     extra = request.form.get('extra', '').strip()
-    
-    # Combine user input into a structured prompt
-    prompt = f"Write a fable for children (ages 6-10) using simple language. \
-        The main character is a {character} in a {setting}, feeling {feeling}. {extra}. \
-        The story should be engaging, appropriate and contain a moral in concept. \
-        Do not include human characters. Do not make the story too long."
 
-    # Generate story (llm_handler.py handles storage)
-    story = generate_story(prompt)
+    # Get both prompts
+    system_prompt, user_prompt = generate_prompt(character, setting, feeling, extra)
+    
+    print("Prompt sent to Gemini:", system_prompt)
+    print("Prompt shown to user:", user_prompt)
+
+    # Generate story using only the system prompt
+    story = generate_story(system_prompt)
+
+    # Save only the user prompt
+    from llm_handler import save_story
+    save_story(user_prompt, story)
+
     return jsonify({'message': 'Story generated', 'story': story})
 
 @app.route('/get-stories', methods=['GET'])
