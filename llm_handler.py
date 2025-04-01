@@ -17,7 +17,7 @@ client = genai.Client(api_key=GEMINI_API_KEY)
 
 # -------------------------------------------------------------------------------
 
-STORIES_FILE = "stories.json"  # File to store past prompts and stories
+STORIES_FILE = "data/all_stories.json"  # File to store past prompts and stories
 
 
 def load_stories():

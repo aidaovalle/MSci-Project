@@ -21,8 +21,7 @@ def generate():
     prompt = f"Write a fable for children (ages 6-10) using simple language. \
         The main character is a {character} in a {setting}, feeling {feeling}. {extra}. \
         The story should be engaging, appropriate and contain a moral in concept. \
-        Do not include human characters. \
-        Do not label any part of the story explicitly."
+        Do not include human characters. Do not make the story too long."
 
     # Generate story (llm_handler.py handles storage)
     story = generate_story(prompt)
