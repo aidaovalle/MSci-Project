@@ -26,14 +26,15 @@
 
 <body class="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
 
-    <sl-tab-group>
-        <sl-tab slot="nav" panel="input-form">Story Generator</sl-tab>
+    <sl-tab-group> 
+        <sl-tab slot="nav" panel="input-form">Story Creator</sl-tab>
         <sl-tab slot="nav" panel="generated-story">Generated Story</sl-tab>
-        <sl-tab slot="nav" panel="past-stories">Past Stories</sl-tab>
+        <sl-tab slot="nav" panel="library">Public Library</sl-tab>
+        <sl-tab slot="nav" panel="past-stories">All Past Stories</sl-tab>
 
-        <sl-tab-panel name="input-form">
+        <sl-tab-panel name="input-form"> <!-- TAB 1 -->
             <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-full">
-                <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Generate a Story</h2>
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Create your Story</h2>
                 
                 <form id="storyForm" class="space-y-4">
                     <label class="block">
@@ -86,16 +87,25 @@
         </sl-tab-panel>
 
     <!-- Story Display Section -->
-        <sl-tab-panel name="generated-story">
+        <sl-tab-panel name="generated-story"> <!-- TAB 2 -->
             <div id="storyContainer" class="bg-white shadow-lg rounded-lg p-6 w-full max-w-2xl mt-6 hidden">
                 <h2 class="text-2xl font-semibold text-gray-800">Your Personalised Story:</h2>
                 <div id="storyResult" class="bg-gray-50 p-4 mt-3 rounded-lg shadow-sm">
                     <p id="storyText" class="text-gray-700"></p>
                 </div>
+                <button id="saveLibraryBtn" class="hidden bg-green-600 text-white px-4 py-2 rounded mt-2">
+                    Save to Public Library
+                </button>
             </div> 
         </sl-tab-panel>
+        <sl-tab-panel name="library"> <!-- TAB 3 -->
+            <div class="max-w-3xl mx-auto bg-white p-6 shadow-lg rounded-lg mt-6">
+                <h2 class="text-2xl font-semibold text-gray-800">Public Story Library</h2>
+                <div id="libraryStories" class="space-y-4 mt-3"></div>
+            </div>
+        </sl-tab-panel>
 
-        <sl-tab-panel name="past-stories">
+        <sl-tab-panel name="past-stories"> <!-- TAB 4 -->
             <div class="max-w-3xl mx-auto bg-white p-6 shadow-lg rounded-lg mt-6">
                 <h2 class="text-2xl font-semibold text-gray-800">Past Generated Stories</h2>
                 <div id="pastStories" class="space-y-4 mt-3">

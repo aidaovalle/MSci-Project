@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-from llm_handler import generate_story, load_stories, generate_prompt
+from llm_handler import generate_story, load_stories, generate_prompt, load_library
 
 app = Flask(__name__)
 
@@ -20,8 +20,8 @@ def generate():
     # Get both prompts
     system_prompt, user_prompt = generate_prompt(character, setting, feeling, extra)
     
-    print("Prompt sent to Gemini:", system_prompt)
-    print("Prompt shown to user:", user_prompt)
+    #print("Prompt sent to Gemini:", system_prompt)
+    #print("Prompt shown to user:", user_prompt)
 
     # Generate story using only the system prompt
     story = generate_story(system_prompt)
@@ -30,12 +30,28 @@ def generate():
     from llm_handler import save_story
     save_story(user_prompt, story)
 
-    return jsonify({'message': 'Story generated', 'story': story})
+    return jsonify({'message': 'Story generated', 'user_prompt': user_prompt, 'story': story})
 
 @app.route('/get-stories', methods=['GET'])
 def get_stories():
     # Returns saved stories
     return jsonify(load_stories())
+
+@app.route('/save-to-library', methods=['POST'])
+def save_to_library():
+    data = request.get_json()
+    prompt = data.get("prompt", "")
+    story = data.get("story", "")
+
+    from llm_handler import save_to_library
+    save_to_library(prompt, story)
+
+    return jsonify({"message": "Story saved to public library"})
+
+@app.route('/get-library', methods=['GET'])
+def get_library():
+    from llm_handler import load_library
+    return jsonify(load_library())
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8080)
