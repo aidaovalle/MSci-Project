@@ -53,5 +53,14 @@ def get_library():
     from llm_handler import load_library
     return jsonify(load_library())
 
+@app.route('/delete-from-library', methods=['POST'])
+def delete_from_library_route():
+    data = request.get_json()
+    prompt = data.get("prompt", "")
+    story = data.get("story", "")
+    from llm_handler import delete_from_library
+    delete_from_library(prompt, story)
+    return jsonify({"message": "Story deleted from library"})
+
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8080)

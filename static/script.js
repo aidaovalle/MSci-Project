@@ -91,7 +91,26 @@ function loadLibraryStories() {
                 storyElement.innerHTML = `
                     <p><strong>Story Details:</strong><br>${story.prompt}</p>
                     <p class="mt-2"><strong>Story:</strong><br>${story.story}</p>
-                `;
+                    <button class="delete-btn mt-2 bg-red-500 text-white px-2 py-1 rounded text-sm">
+                        Delete from Library
+                    </button>
+                    `;
+
+                // Add event listener for delete button
+                storyElement.querySelector(".delete-btn").addEventListener("click", function () {
+                    fetch("/delete-from-library", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ prompt: story.prompt, story: story.story })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message);
+                        loadLibraryStories(); // Refresh the tab after deletion
+                    })
+                    .catch(error => alert("Error deleting story: " + error));
+                });
+
                 libraryDiv.appendChild(storyElement);
             });
         });

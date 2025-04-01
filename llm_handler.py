@@ -78,3 +78,11 @@ def save_to_library(prompt, story):
 
     with open(LIBRARY_FILE, "w") as file:
         json.dump(library, file, indent=4)
+
+def delete_from_library(prompt, story):
+    # Delete story from public library
+    library = load_library()
+    library = [item for item in library if not (item["prompt"] == prompt and item["story"] == story)]
+
+    with open(LIBRARY_FILE, "w") as file:
+        json.dump(library, file, indent=4)
