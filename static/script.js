@@ -1,5 +1,10 @@
 let currentPrompt = "";
 let currentStory = "";
+let storyToDelete = null;
+const deleteDialog = document.getElementById("delete-confirm-dialog");
+const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
+
 
 // Story generation
 document.getElementById("storyForm").addEventListener("submit", function(event) {
@@ -100,25 +105,43 @@ function loadLibraryStories() {
 
                 // Add event listener for delete button
                 storyElement.querySelector(".delete-btn").addEventListener("click", function () {
-                    fetch("/delete-from-library", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ prompt: story.prompt, story: story.story })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        showAlert("primary", data.message);
-                        loadLibraryStories(); // Refresh the tab after deletion
-                    })
-                    .catch(error => {
-                        showAlert("danger", "Error deleting story: " + error);
-                    });
+                    storyToDelete = { prompt: story.prompt, story: story.story };
+                    deleteDialog.show();
                 });
 
                 libraryDiv.appendChild(storyElement);
             });
         });
 }
+
+// Dialog for deleting story from library
+confirmDeleteBtn.addEventListener("click", () => {
+    if (!storyToDelete) return;
+
+    fetch("/delete-from-library", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(storyToDelete)
+    })
+    .then(response => response.json())
+    .then(data => {
+        showAlert("primary", data.message);
+        loadLibraryStories();
+    })
+    .catch(error => {
+        showAlert("danger", "Error deleting story: " + error);
+    })
+    .finally(() => {
+        deleteDialog.hide();
+        storyToDelete = null;
+    });
+});
+
+cancelDeleteBtn.addEventListener("click", () => {
+    deleteDialog.hide();
+    storyToDelete = null; // optional: clear selected story
+});
+
 
 // Load library once, not each time it's opened
 document.querySelector("sl-tab-group").addEventListener("sl-tab-show", (event) => {
