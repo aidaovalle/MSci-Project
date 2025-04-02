@@ -40,6 +40,7 @@ function displayGeneratedStory(data) {
     currentPrompt = data.user_prompt;
     currentStory = data.story;
     document.getElementById("saveLibraryBtn").classList.remove("hidden");
+    document.querySelector("sl-tab-group").show("generated-story");
     loadPastStories();
 }
 
