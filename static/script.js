@@ -154,8 +154,8 @@ function showAlert(type, message) {
     const alert = document.getElementById("main-alert");
     const textSpan = document.getElementById("main-alert-text");
 
-    // Set alert type
-    alert.variant = type; // "success", "warning", "danger", "primary", etc.
+    // Alert type: success, warning, danger, primary, etc.
+    alert.variant = type;
 
     // Set message
     textSpan.textContent = message;

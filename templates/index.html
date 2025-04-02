@@ -4,43 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Story Generator</title>
-
-     <!-- Tailwind CSS -->
-     <script src="https://cdn.tailwindcss.com"></script>
-
-     <!-- Google Fonts -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-
-    <!-- Shoelace UI Framework -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.0/cdn/themes/light.css" />
     <script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.0/cdn/shoelace-autoloader.js"></script>
-    
     <style>
         body {
             font-family: 'Lexend', sans-serif;
             background-color: #f8fafc;
         }
     </style>
-
 </head>
 
 <body class="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-
+    
     <sl-alert id="main-alert" variant="primary" duration="4000" class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 hidden" closable>
         <sl-icon slot="icon" name="info-circle"></sl-icon>
         <span id="main-alert-text">Something happened.</span>
     </sl-alert>
     
+    <!-------------------------------- Tab Group -------------------------------->
     <sl-tab-group> 
         <sl-tab slot="nav" panel="input-form">Story Creator</sl-tab>
         <sl-tab slot="nav" panel="generated-story">Generated Story</sl-tab>
         <sl-tab slot="nav" panel="library">Public Library</sl-tab>
         <sl-tab slot="nav" panel="past-stories">All Past Stories</sl-tab>
-
-        <sl-tab-panel name="input-form"> <!-- TAB 1 -->
+        
+        <!----------------- TAB 1 ----------------->
+        <sl-tab-panel name="input-form">
             <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-full">
                 <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Create your Story</h2>
                 
+                <!--- Form fields --->
                 <form id="storyForm" class="space-y-4">
                     <label class="block">
                         <span class="text-gray-700 font-medium">
@@ -91,8 +86,9 @@
             </div>
         </sl-tab-panel>
 
-    <!-- Story Display Section -->
-        <sl-tab-panel name="generated-story"> <!-- TAB 2 -->
+        <!--- Story display section --->
+        <!----------------- TAB 2 ----------------->
+        <sl-tab-panel name="generated-story">
             <div id="storyContainer" class="bg-white shadow-lg rounded-lg p-6 w-full max-w-2xl mt-6 hidden">
                 <h2 class="text-2xl font-semibold text-gray-800">Your Personalised Story:</h2>
                 <div id="storyResult" class="bg-gray-50 p-4 mt-3 rounded-lg shadow-sm">
@@ -103,14 +99,17 @@
                 </button>
             </div> 
         </sl-tab-panel>
-        <sl-tab-panel name="library"> <!-- TAB 3 -->
+
+        <!----------------- TAB 3 ----------------->
+        <sl-tab-panel name="library">
             <div class="max-w-3xl mx-auto bg-white p-6 shadow-lg rounded-lg mt-6">
                 <h2 class="text-2xl font-semibold text-gray-800">Public Story Library</h2>
                 <div id="libraryStories" class="space-y-4 mt-3"></div>
             </div>
         </sl-tab-panel>
 
-        <sl-tab-panel name="past-stories"> <!-- TAB 4 -->
+        <!----------------- TAB 4 ----------------->
+        <sl-tab-panel name="past-stories">
             <div class="max-w-3xl mx-auto bg-white p-6 shadow-lg rounded-lg mt-6">
                 <h2 class="text-2xl font-semibold text-gray-800">Past Generated Stories</h2>
                 <div id="pastStories" class="space-y-4 mt-3">
@@ -119,6 +118,7 @@
         </sl-tab-panel>
 
     </sl-tab-group>
+    <!--------------------------------------------------------------------------->
 
     <sl-dialog id="delete-confirm-dialog" label="Confirm Deletion" class="w-full max-w-md">
         <p>Do you want to delete this story from the public library?</p>
