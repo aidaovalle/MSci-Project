@@ -167,7 +167,7 @@ function showAlert(type, message) {
     alert.open = true;
 
     // Scroll to alert
-    alert.scrollIntoView({ behavior: "smooth", block: "center" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 // Load past stories on page load

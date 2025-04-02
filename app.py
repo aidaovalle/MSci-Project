@@ -55,7 +55,7 @@ def save_to_library():
     success = save_to_library(prompt, story)
 
     if success:
-        return jsonify({"status": "saved", "message": "Story added to public library!"})
+        return jsonify({"status": "saved", "message": "Story added to the public library!"})
     else:
         return jsonify(
             {
@@ -80,7 +80,7 @@ def delete_from_library_route():
     from llm_handler import delete_from_library
 
     delete_from_library(prompt, story)
-    return jsonify({"message": "Story deleted from library."})
+    return jsonify({"message": "Story deleted from the public library."})
 
 
 if __name__ == "__main__":
