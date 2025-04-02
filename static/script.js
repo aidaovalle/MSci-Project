@@ -52,13 +52,14 @@ document.getElementById("saveLibraryBtn").addEventListener("click", function() {
         })
         .then(response => response.json())
         .then(data => {
-            alert(data.message);
-            loadLibraryStories(); // Refresh library stories
-            document.querySelector('sl-tab-group').show('library'); // switch to library tab        
-        })
-        .catch(error => alert("Error saving to library: " + error));
+            showAlert(data.status === "saved" ? "success" : "warning", data.message);
+            loadLibraryStories();
+            document.querySelector('sl-tab-group').show('library');
+        })        
+        .catch(error => {
+            showAlert("danger", "Error saving to library: " + error);
+        });
 });
-
 // Load past stories
 function loadPastStories() {
     fetch("/get-stories")
@@ -105,10 +106,12 @@ function loadLibraryStories() {
                     })
                     .then(response => response.json())
                     .then(data => {
-                        alert(data.message);
+                        showAlert("primary", data.message);
                         loadLibraryStories(); // Refresh the tab after deletion
                     })
-                    .catch(error => alert("Error deleting story: " + error));
+                    .catch(error => {
+                        showAlert("danger", "Error deleting story: " + error);
+                    });
                 });
 
                 libraryDiv.appendChild(storyElement);
@@ -122,6 +125,21 @@ document.querySelector("sl-tab-group").addEventListener("sl-tab-show", (event) =
         loadLibraryStories();
     }
 });
+
+function showAlert(type, message) {
+    const alert = document.getElementById("main-alert");
+    const textSpan = document.getElementById("main-alert-text");
+
+    // Set alert type
+    alert.variant = type; // "success", "warning", "danger", "primary", etc.
+
+    // Set message
+    textSpan.textContent = message;
+
+    // Show alert
+    alert.classList.remove("hidden");
+    alert.open = true;
+}
 
 // Load past stories on page load
 window.onload = loadPastStories;

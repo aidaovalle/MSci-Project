@@ -74,10 +74,15 @@ def load_library():
 def save_to_library(prompt, story):
     # Save story to public library
     library = load_library()
+    # Check if the story already exists in the library
+    for s in library:
+        if s["prompt"] == prompt and s["story"] == story:
+            return  False # Story already in library, skip adding
     library.insert(0, {"prompt": prompt, "story": story})
-
     with open(LIBRARY_FILE, "w") as file:
         json.dump(library, file, indent=4)
+        
+    return True
 
 def delete_from_library(prompt, story):
     # Delete story from public library
