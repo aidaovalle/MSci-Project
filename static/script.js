@@ -59,8 +59,12 @@ document.getElementById("saveLibraryBtn").addEventListener("click", function() {
         .then(response => response.json())
         .then(data => {
             showAlert(data.status === "saved" ? "success" : "warning", data.message);
-            loadLibraryStories();
-            document.querySelector('sl-tab-group').show('library');
+            
+            if (data.status === "saved") {
+                loadLibraryStories();
+                document.querySelector('sl-tab-group').show('library');
+            }
+            // else, stay on generated-story tab
         })        
         .catch(error => {
             showAlert("danger", "Error saving to library: " + error);
@@ -154,15 +158,16 @@ function showAlert(type, message) {
     const alert = document.getElementById("main-alert");
     const textSpan = document.getElementById("main-alert-text");
 
-    // Alert type: success, warning, danger, primary, etc.
-    alert.variant = type;
-
-    // Set message
+    // Set alert type and message
+    alert.variant = type; // Success, warning, danger, primary, etc.
     textSpan.textContent = message;
 
     // Show alert
     alert.classList.remove("hidden");
     alert.open = true;
+
+    // Scroll to alert
+    alert.scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
 // Load past stories on page load
