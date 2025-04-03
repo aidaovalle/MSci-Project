@@ -71,7 +71,6 @@ document.getElementById("saveLibraryBtn").addEventListener("click", function() {
 });
 // Load past stories
 function loadPastStories() {
-    document.getElementById("pastStoriesLoading").style.display = "block";
     fetch("/get-stories")
         .then(response => response.json())
         .then(stories => {
@@ -87,9 +86,6 @@ function loadPastStories() {
                 pastStoriesDiv.appendChild(storyElement);
             });
         })
-        .finally(() => {
-            document.getElementById("pastStoriesLoading").style.display = "none";
-        });
 }
 
 // Load library
@@ -119,9 +115,6 @@ function loadLibraryStories() {
                 libraryDiv.appendChild(storyElement);
             });
         })
-        .finally(() => {
-            document.getElementById("libraryLoading").style.display = "none";
-        });
 }
 
 // Dialog for deleting story from library
