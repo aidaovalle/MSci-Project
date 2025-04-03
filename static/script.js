@@ -1,9 +1,12 @@
 let currentPrompt = "";
 let currentStory = "";
 let storyToDelete = null;
+let currentObserver = null;
+
 const deleteDialog = document.getElementById("delete-confirm-dialog");
 const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
 const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
+const backToTopBtn = document.getElementById("backToTopBtn");
 
 // Story generation
 document.getElementById("storyForm").addEventListener("submit", function(event) {
@@ -129,7 +132,7 @@ confirmDeleteBtn.addEventListener("click", () => {
     .then(response => response.json())
     .then(data => {
         showAlert("delete", data.message);
-        libraryLoaded = false;
+        //libraryLoaded = false;
         loadLibraryStories();
     })
     .catch(error => {
@@ -179,6 +182,31 @@ function showAlert(type, message) {
     // Scroll to alert
     window.scrollTo({ top: 0, behavior: "smooth" });
 }
+
+function handleBackToTop(tabName) {
+    if (currentObserver) currentObserver.disconnect();
+    backToTopBtn.classList.add("hidden");
+    if (!["library", "past-stories"].includes(tabName)) return;
+
+    const tabPanel = document.querySelector(`sl-tab-panel[name="${tabName}"]`);
+    const marker = document.createElement("div");
+    marker.style.height = "1px";
+    tabPanel.prepend(marker);
+
+    currentObserver = new IntersectionObserver(([entry]) => {
+        backToTopBtn.classList.toggle("hidden", entry.isIntersecting);
+    }, { threshold: 0 });
+
+    currentObserver.observe(marker);
+}
+
+document.querySelector("sl-tab-group").addEventListener("sl-tab-show", e => {
+    handleBackToTop(e.detail.name);
+});
+
+backToTopBtn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+});
 
 // Load past stories on page load
 window.onload = loadPastStories;
