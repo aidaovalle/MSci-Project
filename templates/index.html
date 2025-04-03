@@ -106,6 +106,16 @@
         <sl-tab-panel name="library">
             <div class="max-w-3xl mx-auto bg-white p-6 shadow-lg rounded-lg mt-6">
                 <h2 class="text-2xl font-semibold text-gray-800">Public Story Library</h2>
+
+                <div class="w-full max-w-3xl mb-4">
+                    <sl-input 
+                      id="librarySearchInput"
+                      placeholder="Search library stories by character, setting or emotion..."
+                      clearable>
+                      <sl-icon name="search" slot="prefix"></sl-icon>
+                    </sl-input>
+                </div>
+
                 <div id="libraryLoading" class="text-center text-gray-600 mt-4 hidden">
                     <sl-spinner></sl-spinner> Loading library...
                 </div>
@@ -118,6 +128,16 @@
         <sl-tab-panel name="past-stories">
             <div class="max-w-3xl mx-auto bg-white p-6 shadow-lg rounded-lg mt-6">
                 <h2 class="text-2xl font-semibold text-gray-800">Past Generated Stories</h2>
+
+                <div class="w-full max-w-3xl mb-4">
+                    <sl-input 
+                      id="pastSearchInput"
+                      placeholder="Search all stories by character, setting or emotion..."
+                      clearable>
+                      <sl-icon name="search" slot="prefix"></sl-icon>
+                    </sl-input>
+                </div>
+
                 <div id="pastStoriesLoading" class="text-center text-gray-600 mt-4 hidden">
                     <sl-spinner></sl-spinner> Loading past stories...
                 </div>

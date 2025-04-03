@@ -2,13 +2,15 @@ let currentPrompt = "";
 let currentStory = "";
 let storyToDelete = null;
 let currentObserver = null;
+let allLibraryStories = [];
+let allPastStories = [];
 
 const deleteDialog = document.getElementById("delete-confirm-dialog");
 const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
 const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
 const backToTopBtn = document.getElementById("backToTopBtn");
 
-// Story generation
+// Story generation ----------------------------------------------------------------------------
 document.getElementById("storyForm").addEventListener("submit", function(event) {
     event.preventDefault();
 
@@ -35,7 +37,7 @@ document.getElementById("storyForm").addEventListener("submit", function(event) 
         });
 });
 
-// Display generated story
+// Display generated story ----------------------------------------------------------------------------
 function displayGeneratedStory(data) {
     document.getElementById("loading").style.display = "none";
     document.getElementById("storyContainer").classList.remove("hidden");
@@ -44,24 +46,26 @@ function displayGeneratedStory(data) {
         <p><strong>Story Details:</strong><br>${data.user_prompt}</p>
         <p class="mt-2"><strong>Story:</strong><br>${data.story}</p>
     `;
+
     currentPrompt = data.user_prompt;
     currentStory = data.story;
+
     document.getElementById("saveLibraryBtn").classList.remove("hidden");
     document.querySelector("sl-tab-group").show("generated-story");
-    loadPastStories();
+
+    loadPastStories(); // Re-fetch
 }
 
-// Send story to library
+// Save story to library ----------------------------------------------------------------------------
 document.getElementById("saveLibraryBtn").addEventListener("click", function() {
     fetch("/save-to-library", {
-            method: "POST",
-            headers: { "Content-Type": "application/json"},
-            body: JSON.stringify({ prompt: currentPrompt, story: currentStory })
-        })
+        method: "POST",
+        headers: { "Content-Type": "application/json"},
+        body: JSON.stringify({ prompt: currentPrompt, story: currentStory })
+    })
         .then(response => response.json())
         .then(data => {
             showAlert(data.status === "saved" ? "success" : "warning", data.message);
-            
             if (data.status === "saved") {
                 loadLibraryStories();
                 document.querySelector('sl-tab-group').show('library');
@@ -72,55 +76,71 @@ document.getElementById("saveLibraryBtn").addEventListener("click", function() {
             showAlert("danger", "Error saving to library: " + error);
         });
 });
-// Load past stories
+
+// Getting past stories ----------------------------------------------------------------------------
 function loadPastStories() {
     fetch("/get-stories")
         .then(response => response.json())
         .then(stories => {
-            let pastStoriesDiv = document.getElementById("pastStories");
-            pastStoriesDiv.innerHTML = ""; // Clear previous
-            stories.forEach(story => {
-                let storyElement = document.createElement("div");
-                storyElement.classList.add("bg-gray-50", "p-4", "rounded-lg", "shadow-md", "mt-2");
-                storyElement.innerHTML = `
-                    <p><strong>Story Details:</strong><br>${story.prompt}</p>
-                    <p class="mt-2"><strong>Story:</strong><br>${story.story}</p>
-                    `;
-                pastStoriesDiv.appendChild(storyElement);
-            });
-        })
+            allPastStories = stories; // save globally
+            renderPastStories(stories); // Always render
+        });
 }
 
-// Load library
+// Showing past stories ----------------------------------------------------------------------------
+function renderPastStories(stories) {
+    const pastStoriesDiv = document.getElementById("pastStories");
+    pastStoriesDiv.innerHTML = ""; // clear existing content
+
+    stories.forEach(story => {
+        const storyElement = document.createElement("div");
+        storyElement.classList.add("bg-gray-50", "p-4", "rounded-lg", "shadow-md", "mt-2");
+        storyElement.innerHTML = `
+            <p><strong>Story Details:</strong><br>${story.prompt}</p>
+            <p class="mt-2"><strong>Story:</strong><br>${story.story}</p>
+        `;
+        
+        pastStoriesDiv.appendChild(storyElement);
+    });
+}
+
+// Getting library data ----------------------------------------------------------------------------
 function loadLibraryStories() {
     fetch("/get-library")
         .then(response => response.json())
         .then(stories => {
-            let libraryDiv = document.getElementById("libraryStories");
-            libraryDiv.innerHTML = ""; // Clear previous
-            stories.forEach(story => {
-                let storyElement = document.createElement("div");
-                storyElement.classList.add("bg-gray-50", "p-4", "rounded-lg", "shadow-md");
-                storyElement.innerHTML = `
-                    <p><strong>Story Details:</strong><br>${story.prompt}</p>
-                    <p class="mt-2"><strong>Story:</strong><br>${story.story}</p>
-                    <button class="delete-btn mt-2 bg-red-500 text-white px-2 py-1 rounded text-sm">
-                        Delete from Library
-                    </button>
-                    `;
-
-                // Add event listener for delete button
-                storyElement.querySelector(".delete-btn").addEventListener("click", function () {
-                    storyToDelete = { prompt: story.prompt, story: story.story };
-                    deleteDialog.show();
-                });
-
-                libraryDiv.appendChild(storyElement);
-            });
-        })
+            allLibraryStories = stories; // Store in global variable
+            renderLibraryStories(stories); // Display stories
+        });
 }
 
-// Dialog for deleting story from library
+// Showing library data ----------------------------------------------------------------------------
+function renderLibraryStories(stories) {
+    const libraryDiv = document.getElementById("libraryStories");
+    libraryDiv.innerHTML = ""; // clear previous stories
+    stories.forEach(story => {
+        const storyElement = document.createElement("div");
+        storyElement.classList.add("bg-gray-50", "p-4", "rounded-lg", "shadow-md", "mt-2");
+        storyElement.innerHTML = `
+            <p><strong>Story Details:</strong><br>${story.prompt}</p>
+            <p class="mt-2"><strong>Story:</strong><br>${story.story}</p>
+            <button class="delete-btn mt-2 bg-red-500 text-white px-2 py-1 rounded text-sm">
+                Delete from Library
+            </button>
+        `;
+
+        // Add delete listener
+        storyElement.querySelector(".delete-btn").addEventListener("click", () => {
+            storyToDelete = { prompt: story.prompt, story: story.story };
+            deleteDialog.show();
+        });
+
+        libraryDiv.appendChild(storyElement);
+    });
+}
+
+
+// Dialog for deleting story from library ----------------------------------------------------------------------------
 confirmDeleteBtn.addEventListener("click", () => {
     if (!storyToDelete) return;
 
@@ -129,19 +149,18 @@ confirmDeleteBtn.addEventListener("click", () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(storyToDelete)
     })
-    .then(response => response.json())
-    .then(data => {
-        showAlert("delete", data.message);
-        //libraryLoaded = false;
-        loadLibraryStories();
-    })
-    .catch(error => {
-        showAlert("danger", "Error deleting story: " + error);
-    })
-    .finally(() => {
-        deleteDialog.hide();
-        storyToDelete = null;
-    });
+        .then(response => response.json())
+        .then(data => {
+            showAlert("delete", data.message);
+            loadLibraryStories();
+        })
+        .catch(error => {
+            showAlert("danger", "Error deleting story: " + error);
+        })
+        .finally(() => {
+            deleteDialog.hide();
+            storyToDelete = null;
+        });
 });
 
 cancelDeleteBtn.addEventListener("click", () => {
@@ -149,14 +168,46 @@ cancelDeleteBtn.addEventListener("click", () => {
     storyToDelete = null; // optional: clear selected story
 });
 
-
-// Load library once, not each time it's opened
+// Tab switching and loading content ----------------------------------------------------------------------------
 document.querySelector("sl-tab-group").addEventListener("sl-tab-show", (event) => {
-    if (event.detail.name === "library") {
-        loadLibraryStories();
-    }
+    const activeTab = event.detail.name;
+    // Track the open tab and load content only when tabs are opened for the first time
+    if (activeTab === "library") loadLibraryStories();
+    if (activeTab === "past-stories") loadPastStories();
+    handleBackToTop(activeTab); 
 });
 
+// Listen for input changes in the search bars ----------------------------------------------------------------------------
+document.getElementById("librarySearchInput").addEventListener("input", (event) => {
+    const query = event.target.value.toLowerCase().trim();
+    const filtered = query
+        ? allLibraryStories.filter(story => 
+            story.prompt && story.prompt.toLowerCase().includes(query))
+        : allLibraryStories; // Show all stories if query is empty
+    // Show the library with filtered stories
+    renderLibraryStories(filtered);
+});
+
+document.getElementById("librarySearchInput").addEventListener("sl-clear", () => {
+    renderLibraryStories(allLibraryStories);
+});
+
+document.getElementById("pastSearchInput").addEventListener("input", (event) => {
+    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    const query = event.target.value.toLowerCase().trim();
+    const filtered = query
+        ? allPastStories.filter(story => 
+            story.prompt && story.prompt.toLowerCase().includes(query)) // Check if prompt exists and if it does, do the rest
+        : allPastStories; // Show all stories if query is empty
+    // Show the filtered past stories
+    renderPastStories(filtered);
+});
+
+document.getElementById("pastSearchInput").addEventListener("sl-clear", () => {
+    renderPastStories(allPastStories);
+});
+  
+// Alerts ----------------------------------------------------------------------------
 function showAlert(type, message) {
     const alert = document.getElementById("main-alert");
     const icon = document.getElementById("main-alert-icon");
@@ -175,7 +226,6 @@ function showAlert(type, message) {
     };
 
     icon.name = iconMap[type] || "info-circle";
-    // Show alert
     alert.classList.remove("hidden");
     alert.open = true;
 
@@ -183,14 +233,23 @@ function showAlert(type, message) {
     window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
+// Back to top button ----------------------------------------------------------------------------
 function handleBackToTop(tabName) {
     if (currentObserver) currentObserver.disconnect();
     backToTopBtn.classList.add("hidden");
+
     if (!["library", "past-stories"].includes(tabName)) return;
 
     const tabPanel = document.querySelector(`sl-tab-panel[name="${tabName}"]`);
+
+    // Remove old marker if it exists
+    const oldMarker = tabPanel.querySelector(".scroll-marker");
+    if (oldMarker) oldMarker.remove();
+
+    // Add new marker
     const marker = document.createElement("div");
     marker.style.height = "1px";
+    marker.classList.add("scroll-marker");
     tabPanel.prepend(marker);
 
     currentObserver = new IntersectionObserver(([entry]) => {
@@ -200,13 +259,6 @@ function handleBackToTop(tabName) {
     currentObserver.observe(marker);
 }
 
-document.querySelector("sl-tab-group").addEventListener("sl-tab-show", e => {
-    handleBackToTop(e.detail.name);
-});
-
 backToTopBtn.addEventListener("click", () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
 });
-
-// Load past stories on page load
-window.onload = loadPastStories;
