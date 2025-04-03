@@ -22,6 +22,15 @@ LIBRARY_FILE = "data/library.json" # Public library of stories
 
 def generate_prompt(character, setting, feeling, extra):
     # System-level guidance
+
+    # --------------------------------------------------
+    # --------------------------------------------------
+    # --------------------------------------------------
+    # HOW DO I CHECK IF THE PREVIOUS PROMPTS ARE DELETED? SOMETIMES I SEE COMMON THINGS IN A STORY, FROM PREVIOUS PROMPTS....
+    # --------------------------------------------------
+    # --------------------------------------------------
+    # --------------------------------------------------
+    
     system_prompt = (
         "You are a storytelling assistant that generates short, creative children's stories. "
         "Stories should be imaginative, emotionally engaging, appropriate and tailored for young readers. "

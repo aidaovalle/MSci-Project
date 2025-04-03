@@ -178,6 +178,11 @@ document.querySelector("sl-tab-group").addEventListener("sl-tab-show", (event) =
 });
 
 // Listen for input changes in the search bars ----------------------------------------------------------------------------
+// if i search for something and then change to a different tab, 
+// and then go back again to the first tab, 
+// the search bar still shows the filter,
+// but the stories are no longer filtered#
+// ----------------------------------------------------------------------------
 document.getElementById("librarySearchInput").addEventListener("input", (event) => {
     const query = event.target.value.toLowerCase().trim();
     const filtered = query
