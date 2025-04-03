@@ -17,7 +17,7 @@
 </head>
 
 <body class="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-    
+
     <sl-alert id="main-alert" variant="primary" duration="4000" class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 hidden" closable>
         <sl-icon slot="icon" name="info-circle"></sl-icon>
         <span id="main-alert-text">Something happened.</span>
@@ -104,16 +104,22 @@
         <sl-tab-panel name="library">
             <div class="max-w-3xl mx-auto bg-white p-6 shadow-lg rounded-lg mt-6">
                 <h2 class="text-2xl font-semibold text-gray-800">Public Story Library</h2>
+                <div id="libraryLoading" class="text-center text-gray-600 mt-4 hidden">
+                    <sl-spinner></sl-spinner> Loading library...
+                </div>
                 <div id="libraryStories" class="space-y-4 mt-3"></div>
             </div>
+            
         </sl-tab-panel>
 
         <!----------------- TAB 4 ----------------->
         <sl-tab-panel name="past-stories">
             <div class="max-w-3xl mx-auto bg-white p-6 shadow-lg rounded-lg mt-6">
                 <h2 class="text-2xl font-semibold text-gray-800">Past Generated Stories</h2>
-                <div id="pastStories" class="space-y-4 mt-3">
+                <div id="pastStoriesLoading" class="text-center text-gray-600 mt-4 hidden">
+                    <sl-spinner></sl-spinner> Loading past stories...
                 </div>
+                <div id="pastStories" class="space-y-4 mt-3"></div>
             </div>
         </sl-tab-panel>
 

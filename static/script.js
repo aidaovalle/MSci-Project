@@ -4,7 +4,8 @@ let storyToDelete = null;
 const deleteDialog = document.getElementById("delete-confirm-dialog");
 const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
 const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
-
+let libraryLoaded = false;
+let pastStoriesLoaded = false;
 
 // Story generation
 document.getElementById("storyForm").addEventListener("submit", function(event) {
@@ -72,6 +73,8 @@ document.getElementById("saveLibraryBtn").addEventListener("click", function() {
 });
 // Load past stories
 function loadPastStories() {
+    if (pastStoriesLoaded) return; // Only load the first time it's opened
+    document.getElementById("pastStoriesLoading").style.display = "block";
     fetch("/get-stories")
         .then(response => response.json())
         .then(stories => {
@@ -86,11 +89,18 @@ function loadPastStories() {
                     `;
                 pastStoriesDiv.appendChild(storyElement);
             });
+            pastStoriesLoaded = true; // Stories have loaded
+        })
+        .finally(() => {
+            document.getElementById("pastStoriesLoading").style.display = "none";
         });
 }
 
 // Load library
 function loadLibraryStories() {
+    if (libraryLoaded) return;
+    document.getElementById("libraryLoading").style.display = "block";
+    
     fetch("/get-library")
         .then(response => response.json())
         .then(stories => {
@@ -115,6 +125,10 @@ function loadLibraryStories() {
 
                 libraryDiv.appendChild(storyElement);
             });
+            libraryLoaded = true;
+        })
+        .finally(() => {
+            document.getElementById("libraryLoading").style.display = "none";
         });
 }
 
