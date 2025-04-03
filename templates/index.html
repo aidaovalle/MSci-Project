@@ -18,10 +18,12 @@
 
 <body class="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
 
-    <sl-alert id="main-alert" variant="primary" duration="4000" class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 hidden" closable>
-        <sl-icon slot="icon" name="info-circle"></sl-icon>
-        <span id="main-alert-text">Something happened.</span>
-    </sl-alert>
+    <sl-alert id="main-alert" variant="primary" duration="4000"
+          class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 hidden"
+          closable>
+  <sl-icon id="main-alert-icon" slot="icon" name="info-circle"></sl-icon>
+  <span id="main-alert-text">Something happened.</span>
+</sl-alert>
     
     <!-------------------------------- Tab Group -------------------------------->
     <sl-tab-group> 

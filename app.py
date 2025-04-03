@@ -55,12 +55,12 @@ def save_to_library():
     success = save_to_library(prompt, story)
 
     if success:
-        return jsonify({"status": "saved", "message": "Story added to the public library!"})
+        return jsonify({"status": "saved", "message": "Story added to public library!"})
     else:
         return jsonify(
             {
                 "status": "duplicate",
-                "message": "This story is already in the public library.",
+                "message": "This story is already in the library.",
             }
         )
 

@@ -4,8 +4,6 @@ let storyToDelete = null;
 const deleteDialog = document.getElementById("delete-confirm-dialog");
 const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
 const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
-let libraryLoaded = false;
-let pastStoriesLoaded = false;
 
 // Story generation
 document.getElementById("storyForm").addEventListener("submit", function(event) {
@@ -73,7 +71,6 @@ document.getElementById("saveLibraryBtn").addEventListener("click", function() {
 });
 // Load past stories
 function loadPastStories() {
-    if (pastStoriesLoaded) return; // Only load the first time it's opened
     document.getElementById("pastStoriesLoading").style.display = "block";
     fetch("/get-stories")
         .then(response => response.json())
@@ -89,7 +86,6 @@ function loadPastStories() {
                     `;
                 pastStoriesDiv.appendChild(storyElement);
             });
-            pastStoriesLoaded = true; // Stories have loaded
         })
         .finally(() => {
             document.getElementById("pastStoriesLoading").style.display = "none";
@@ -98,9 +94,6 @@ function loadPastStories() {
 
 // Load library
 function loadLibraryStories() {
-    if (libraryLoaded) return;
-    document.getElementById("libraryLoading").style.display = "block";
-    
     fetch("/get-library")
         .then(response => response.json())
         .then(stories => {
@@ -125,7 +118,6 @@ function loadLibraryStories() {
 
                 libraryDiv.appendChild(storyElement);
             });
-            libraryLoaded = true;
         })
         .finally(() => {
             document.getElementById("libraryLoading").style.display = "none";
@@ -143,7 +135,8 @@ confirmDeleteBtn.addEventListener("click", () => {
     })
     .then(response => response.json())
     .then(data => {
-        showAlert("primary", data.message);
+        showAlert("delete", data.message);
+        libraryLoaded = false;
         loadLibraryStories();
     })
     .catch(error => {
@@ -170,12 +163,22 @@ document.querySelector("sl-tab-group").addEventListener("sl-tab-show", (event) =
 
 function showAlert(type, message) {
     const alert = document.getElementById("main-alert");
+    const icon = document.getElementById("main-alert-icon");
     const textSpan = document.getElementById("main-alert-text");
 
     // Set alert type and message
     alert.variant = type; // Success, warning, danger, primary, etc.
     textSpan.textContent = message;
 
+    const iconMap = {
+        success: "check-circle",
+        warning: "exclamation-triangle",
+        danger: "x-circle",
+        primary: "info-circle",
+        delete: "trash3",
+    };
+
+    icon.name = iconMap[type] || "info-circle";
     // Show alert
     alert.classList.remove("hidden");
     alert.open = true;
