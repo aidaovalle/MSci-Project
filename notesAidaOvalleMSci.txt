@@ -1,0 +1,4 @@
+if its a new edited story, if I save it to the library, it also should go to the past stories section, or it should go to the past stories section right after I have made the changes and saved them
+
+- regenerating a story is sending the same prompt again
+- clear form to be able to delete the current inputs and be able to put new details for a new story I want to generate
