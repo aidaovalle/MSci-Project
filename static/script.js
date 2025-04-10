@@ -79,7 +79,7 @@ document.getElementById("saveLibraryBtn").addEventListener("click", function() {
 
 // Getting past stories ----------------------------------------------------------------------------
 function loadPastStories() {
-    fetch("/get-stories")
+    return fetch("/get-stories")
         .then(response => response.json())
         .then(stories => {
             allPastStories = stories; // save globally
@@ -106,7 +106,7 @@ function renderPastStories(stories) {
 
 // Getting library data ----------------------------------------------------------------------------
 function loadLibraryStories() {
-    fetch("/get-library")
+    return fetch("/get-library")
         .then(response => response.json())
         .then(stories => {
             allLibraryStories = stories; // Store in global variable
@@ -172,16 +172,39 @@ cancelDeleteBtn.addEventListener("click", () => {
 document.querySelector("sl-tab-group").addEventListener("sl-tab-show", (event) => {
     const activeTab = event.detail.name;
     // Track the open tab and load content only when tabs are opened for the first time
-    if (activeTab === "library") loadLibraryStories();
-    if (activeTab === "past-stories") loadPastStories();
-    handleBackToTop(activeTab); 
+    if (activeTab === "library") {
+        loadLibraryStories().then(() => {
+            // Keep the filter if the search bar has text
+            const query = document.getElementById("librarySearchInput").value.toLowerCase().trim();
+            if (query) {
+                const filtered = allLibraryStories.filter(
+                    story => story.prompt && story.prompt.toLowerCase().includes(query)
+                );
+                renderLibraryStories(filtered);
+            }
+        });
+    }
+
+    if (activeTab === "past-stories") {
+        loadPastStories().then(() => {
+            const query = document.getElementById("pastSearchInput").value.toLowerCase().trim();
+            if (query) {
+                const filtered = allPastStories.filter(
+                    story => story.prompt && story.prompt.toLowerCase().includes(query)
+                );
+                renderPastStories(filtered);
+            }
+        });
+    }
+
+    handleBackToTop(activeTab);
 });
 
 // Listen for input changes in the search bars ----------------------------------------------------------------------------
 // if i search for something and then change to a different tab, 
 // and then go back again to the first tab, 
 // the search bar still shows the filter,
-// but the stories are no longer filtered#
+// but the stories are no longer filtered
 // ----------------------------------------------------------------------------
 document.getElementById("librarySearchInput").addEventListener("input", (event) => {
     const query = event.target.value.toLowerCase().trim();
@@ -198,7 +221,6 @@ document.getElementById("librarySearchInput").addEventListener("sl-clear", () =>
 });
 
 document.getElementById("pastSearchInput").addEventListener("input", (event) => {
-    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     const query = event.target.value.toLowerCase().trim();
     const filtered = query
         ? allPastStories.filter(story => 
