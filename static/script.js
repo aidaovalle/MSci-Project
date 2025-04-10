@@ -18,14 +18,16 @@ document.getElementById("storyForm").addEventListener("submit", function(event) 
     const character = document.getElementById("character").value.trim();
     const setting = document.getElementById("setting").value.trim();
     const feeling = document.getElementById("feeling").value.trim();
+    const length = document.getElementById("length").value.trim();
 
     // Check if required fields are filled, stops form submission if fields are empty
-    if (!character || !setting || !feeling) {
+    if (!character || !setting || !feeling || !length) {
         alert("Please fill in all required fields before generating the story.");
         return; 
     }
 
     const formData = new FormData(this);
+    formData.append("length", length);
     document.getElementById("loading").style.display = "block";
 
     fetch("/generate", { method: "POST", body: formData})
@@ -43,12 +45,14 @@ function displayGeneratedStory(data) {
     document.getElementById("storyContainer").classList.remove("hidden");
 
     document.getElementById("storyText").innerHTML = `
+        <h3 class="text-xl font-semibold mb-2">${data.title}</h3>
         <p><strong>Story Details:</strong><br>${data.user_prompt}</p>
         <p class="mt-2"><strong>Story:</strong><br>${data.story}</p>
     `;
 
     currentPrompt = data.user_prompt;
     currentStory = data.story;
+    currentTitle = data.title;
 
     document.getElementById("saveLibraryBtn").classList.remove("hidden");
     document.querySelector("sl-tab-group").show("generated-story");
@@ -61,7 +65,7 @@ document.getElementById("saveLibraryBtn").addEventListener("click", function() {
     fetch("/save-to-library", {
         method: "POST",
         headers: { "Content-Type": "application/json"},
-        body: JSON.stringify({ prompt: currentPrompt, story: currentStory })
+        body: JSON.stringify({ prompt: currentPrompt, story: currentStory, title: currentTitle })
     })
         .then(response => response.json())
         .then(data => {
@@ -96,6 +100,7 @@ function renderPastStories(stories) {
         const storyElement = document.createElement("div");
         storyElement.classList.add("bg-gray-50", "p-4", "rounded-lg", "shadow-md", "mt-2");
         storyElement.innerHTML = `
+            <h3 class="text-xl font-semibold mb-2">${story.title || "Untitled Story"}</h3>
             <p><strong>Story Details:</strong><br>${story.prompt}</p>
             <p class="mt-2"><strong>Story:</strong><br>${story.story}</p>
         `;
@@ -122,6 +127,7 @@ function renderLibraryStories(stories) {
         const storyElement = document.createElement("div");
         storyElement.classList.add("bg-gray-50", "p-4", "rounded-lg", "shadow-md", "mt-2");
         storyElement.innerHTML = `
+            <h3 class="text-xl font-semibold mb-2">${story.title || "Untitled Story"}</h3>
             <p><strong>Story Details:</strong><br>${story.prompt}</p>
             <p class="mt-2"><strong>Story:</strong><br>${story.story}</p>
             <button class="delete-btn mt-2 bg-red-500 text-white px-2 py-1 rounded text-sm">
@@ -201,11 +207,6 @@ document.querySelector("sl-tab-group").addEventListener("sl-tab-show", (event) =
 });
 
 // Listen for input changes in the search bars ----------------------------------------------------------------------------
-// if i search for something and then change to a different tab, 
-// and then go back again to the first tab, 
-// the search bar still shows the filter,
-// but the stories are no longer filtered
-// ----------------------------------------------------------------------------
 document.getElementById("librarySearchInput").addEventListener("input", (event) => {
     const query = event.target.value.toLowerCase().trim();
     const filtered = query

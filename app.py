@@ -18,9 +18,11 @@ def generate():
     setting = request.form.get("setting", "").strip()
     feeling = request.form.get("feeling", "").strip()
     extra = request.form.get("extra", "").strip()
+    length = request.form.get("length", "").strip()
+    title = generate_title(character, setting)
 
     # Get both prompts
-    system_prompt, user_prompt = generate_prompt(character, setting, feeling, extra)
+    system_prompt, user_prompt = generate_prompt(character, setting, feeling, length, extra)
 
     # print("Prompt sent to Gemini:", system_prompt)
     # print("Prompt shown to user:", user_prompt)
@@ -31,11 +33,14 @@ def generate():
     # Save only the user prompt
     from llm_handler import save_story
 
-    save_story(user_prompt, story)
+    save_story(user_prompt, story, title)
 
     return jsonify(
-        {"message": "Story generated", "user_prompt": user_prompt, "story": story}
+        {"message": "Story generated", "user_prompt": user_prompt, "story": story, "title": title}
     )
+
+def generate_title(character, setting):
+    return f"The {character.capitalize()} in the {setting.capitalize()}"
 
 
 @app.route("/get-stories", methods=["GET"])
@@ -49,10 +54,11 @@ def save_to_library():
     data = request.get_json()
     prompt = data.get("prompt", "")
     story = data.get("story", "")
-
+    title = data.get("title", "")
+    
     from llm_handler import save_to_library
 
-    success = save_to_library(prompt, story)
+    success = save_to_library(prompt, story, title)
 
     if success:
         return jsonify({"status": "saved", "message": "Story added to public library!"})

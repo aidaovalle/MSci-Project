@@ -20,7 +20,7 @@ client = genai.Client(api_key=GEMINI_API_KEY)
 STORIES_FILE = "data/all_stories.json"  # All generated stories
 LIBRARY_FILE = "data/library.json" # Public library of stories
 
-def generate_prompt(character, setting, feeling, extra):
+def generate_prompt(character, setting, feeling, length, extra):
     # System-level guidance
 
     # --------------------------------------------------
@@ -32,17 +32,17 @@ def generate_prompt(character, setting, feeling, extra):
     # --------------------------------------------------
     
     system_prompt = (
-        "You are a storytelling assistant that generates short, creative children's stories. "
+        "You are a storytelling assistant that generates creative children's stories. "
         "Stories should be imaginative, emotionally engaging, appropriate and tailored for young readers. "
         "The story should contain a moral in concept, so that the children can learn something from it. "
         "Do not explicitly label the moral, but make it clear at the end. Only answer with the story. Do not include humans. "
-        f"Generate a story, where the main character is a {character}, the story takes place in a {setting}, and the character is feeling {feeling}. Additional information: {extra}."
+        f"Generate a **{length}** story, where the main character is a {character}, the story takes place in a {setting}, and the character is feeling {feeling}. Additional information: {extra}."
     )
 
     # User prompt
-    user_prompt = f"Character: {character} | Setting: {setting} | Feeling: {feeling}"
+    user_prompt = f"Character: {character} | Setting: {setting} | Feeling: {feeling} | Length: {length}"
     if extra:
-        user_prompt += f" | Additional notes: {extra}.\n"
+        user_prompt += f" | Additional notes: {extra}\n"
 
     # Combine both
     return system_prompt, user_prompt
@@ -55,10 +55,10 @@ def load_stories():
     except (FileNotFoundError, json.JSONDecodeError):
         return []
     
-def save_story(prompt, story):
+def save_story(prompt, story, title):
     # Save new story to file
     stories = load_stories()
-    stories.insert(0, {"prompt": prompt, "story": story})  # Newest at the top
+    stories.insert(0, {"prompt": prompt, "story": story, "title": title})  # Newest at the top
     with open(STORIES_FILE, "w") as file:
         json.dump(stories, file, indent=4)
 
@@ -80,14 +80,14 @@ def load_library():
     except (FileNotFoundError, json.JSONDecodeError):
         return []
 
-def save_to_library(prompt, story):
+def save_to_library(prompt, story, title):
     # Save story to public library
     library = load_library()
     # Check if the story already exists in the library
     for s in library:
         if s["prompt"] == prompt and s["story"] == story:
             return  False # Story already in library, skip adding
-    library.insert(0, {"prompt": prompt, "story": story})
+    library.insert(0, {"prompt": prompt, "story": story, "title": title})  # Newest at the top
     with open(LIBRARY_FILE, "w") as file:
         json.dump(library, file, indent=4)
         

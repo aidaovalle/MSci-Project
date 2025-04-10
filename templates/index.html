@@ -72,6 +72,20 @@
 
                     <label class="block">
                         <span class="text-gray-700 font-medium">
+                          How long should the story be?
+                          <sl-tooltip content="Pick how long the story should be: a quick tale, something longer, or a big adventure!">
+                            <sl-icon name="info-circle" style="color: gray;"></sl-icon>
+                          </sl-tooltip>
+                        </span>
+                        <sl-select id="length" name="length" placeholder="Select story length" required>
+                          <sl-option value="short">Short</sl-option>
+                          <sl-option value="medium">Medium</sl-option>
+                          <sl-option value="long">Long</sl-option>
+                        </sl-select>
+                    </label>
+                      
+                    <label class="block">
+                        <span class="text-gray-700 font-medium">
                             Anything else for your story?<sl-tooltip content="The character's name, any special characteristics or whatever you don't want happening in the story.">
                                 <sl-icon name="info-circle" style="color: gray;"></sl-icon>
                             </sl-tooltip>
