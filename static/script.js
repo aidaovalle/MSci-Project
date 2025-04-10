@@ -43,6 +43,7 @@ document.getElementById("storyForm").addEventListener("submit", function(event) 
 function displayGeneratedStory(data) {
     document.getElementById("loading").style.display = "none";
     document.getElementById("storyContainer").classList.remove("hidden");
+    document.getElementById("storyEmptyState").classList.add("hidden");
 
     document.getElementById("storyText").innerHTML = `
         <h3 class="text-xl font-semibold mb-2">${data.title}</h3>
@@ -96,6 +97,15 @@ function renderPastStories(stories) {
     const pastStoriesDiv = document.getElementById("pastStories");
     pastStoriesDiv.innerHTML = ""; // clear existing content
 
+    if (!stories.length) {
+        pastStoriesDiv.innerHTML = `
+            <div class="text-center text-gray-500 italic mt-6">
+                It’s quiet here… Go generate something magical! ✨
+            </div>
+        `;
+        return;
+    }
+
     stories.forEach(story => {
         const storyElement = document.createElement("div");
         storyElement.classList.add("bg-gray-50", "p-4", "rounded-lg", "shadow-md", "mt-2");
@@ -123,6 +133,16 @@ function loadLibraryStories() {
 function renderLibraryStories(stories) {
     const libraryDiv = document.getElementById("libraryStories");
     libraryDiv.innerHTML = ""; // clear previous stories
+
+    if (!stories.length) {
+        libraryDiv.innerHTML = `
+            <div class="text-center text-gray-500 italic mt-6">
+                It’s quiet here… Go generate something magical! ✨
+            </div>
+        `;
+        return;
+    }
+
     stories.forEach(story => {
         const storyElement = document.createElement("div");
         storyElement.classList.add("bg-gray-50", "p-4", "rounded-lg", "shadow-md", "mt-2");

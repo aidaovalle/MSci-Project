@@ -43,7 +43,8 @@
                     <label class="block">
                         <span class="text-gray-700 font-medium">
                             What character would you like?
-                            <sl-tooltip content="Choose an animal or magical creature for your story.">
+                            <span class="text-red-500">*</span>
+                            <sl-tooltip content="Pick a fun character like a brave bunny, a talking owl, or a tiny dragon!">
                                 <sl-icon name="info-circle" style="color: gray;"></sl-icon>
                             </sl-tooltip>
                         </span>
@@ -53,7 +54,8 @@
                     <label class="block">
                         <span class="text-gray-700 font-medium">
                             Where should the story take place?
-                            <sl-tooltip content="Pick a location like a forest, castle, or park.">
+                            <span class="text-red-500">*</span>
+                            <sl-tooltip content="Where does the story happen? A sparkling forest, a hidden cave, or a mighty castle?">
                                 <sl-icon name="info-circle" style="color: gray;"></sl-icon>
                             </sl-tooltip>
                         </span>
@@ -63,7 +65,8 @@
                     <label class="block">
                         <span class="text-gray-700 font-medium">
                             How are you feeling?
-                            <sl-tooltip content="How does the main character feel? Nervous, lonely, excited?">
+                            <span class="text-red-500">*</span>
+                            <sl-tooltip content="How are you feeling today? Nervous, lonely, excited? Your story will grow from that feeling — to help, heal, or celebrate!">
                                 <sl-icon name="info-circle" style="color: gray;"></sl-icon>
                             </sl-tooltip>
                         </span>
@@ -73,6 +76,7 @@
                     <label class="block">
                         <span class="text-gray-700 font-medium">
                           How long should the story be?
+                          <span class="text-red-500">*</span>
                           <sl-tooltip content="Pick how long the story should be: a quick tale, something longer, or a big adventure!">
                             <sl-icon name="info-circle" style="color: gray;"></sl-icon>
                           </sl-tooltip>
@@ -86,7 +90,7 @@
                       
                     <label class="block">
                         <span class="text-gray-700 font-medium">
-                            Anything else for your story?<sl-tooltip content="The character's name, any special characteristics or whatever you don't want happening in the story.">
+                            Anything else for your story?<sl-tooltip content="Add anything special! A name, magical powers, or even things you'd like to avoid in the story.">
                                 <sl-icon name="info-circle" style="color: gray;"></sl-icon>
                             </sl-tooltip>
                         </span>
@@ -115,6 +119,12 @@
                     Save to Public Library
                 </button>
             </div> 
+
+            <div id="storyEmptyState" class="text-center text-gray-500 italic mt-10 p-6 bg-white rounded-lg shadow">
+                <div class="text-5xl mb-3">🦄✨</div>
+                <p>It's quiet here...<br>Go create something magical!</p>
+              </div>
+              
         </sl-tab-panel>
 
         <!----------------- TAB 3 ----------------->
