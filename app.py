@@ -36,7 +36,7 @@ def generate():
     save_story(user_prompt, story, title)
 
     return jsonify(
-        {"message": "Story generated", "user_prompt": user_prompt, "story": story, "title": title}
+        {"message": "Story generated", "user_prompt": user_prompt, "story": story, "title": title, "character": character, "setting": setting}
     )
 
 def generate_title(character, setting):
@@ -55,7 +55,7 @@ def save_to_library():
     prompt = data.get("prompt", "")
     story = data.get("story", "")
     title = data.get("title", "")
-    
+
     from llm_handler import save_to_library
 
     success = save_to_library(prompt, story, title)
@@ -87,6 +87,33 @@ def delete_from_library_route():
 
     delete_from_library(prompt, story)
     return jsonify({"message": "Story deleted from the public library."})
+
+
+@app.route("/regenerate", methods=["POST"]) # Generating a new story with prompt
+def regenerate():
+    data = request.get_json()
+    user_prompt = data.get("prompt", "").strip()
+    character = data.get("character", "").strip()
+    setting = data.get("setting", "").strip()
+
+    if not user_prompt or not character or not setting:
+        return jsonify({"error": "Missing prompt, character, or setting"}), 400
+
+    # Rebuild the full system prompt using the stored user_prompt
+    story = generate_story(f"Use the following user prompt to generate a new story: {user_prompt}")
+    title = generate_title(character, setting)
+
+    from llm_handler import save_story
+    save_story(user_prompt, story, title)
+    
+    return jsonify({
+        "message": "Story regenerated",
+        "user_prompt": user_prompt,
+        "story": story,
+        "title": title,
+        "character": character,
+        "setting": setting
+    })
 
 
 if __name__ == "__main__":

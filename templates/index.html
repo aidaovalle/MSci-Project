@@ -111,19 +111,35 @@
         <!----------------- TAB 2 ----------------->
         <sl-tab-panel name="generated-story">
             <div id="storyContainer" class="bg-white shadow-lg rounded-lg p-6 w-full max-w-2xl mt-6 hidden">
-                <h2 class="text-2xl font-semibold text-gray-800">Your Personalised Story:</h2>
-                <div id="storyResult" class="bg-gray-50 p-4 mt-3 rounded-lg shadow-sm">
-                    <p id="storyText" class="text-gray-700"></p>
+                <div class="flex justify-end gap-3 mb-4">
+                    <button id="regenerateBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm flex items-center gap-2">
+                      <sl-icon name="arrow-repeat"></sl-icon> Regenerate
+                    </button>
+                    <button id="editBtn" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded text-sm flex items-center gap-2">
+                      <sl-icon name="pencil"></sl-icon> Edit
+                    </button>
                 </div>
-                <button id="saveLibraryBtn" class="hidden bg-green-600 text-white px-4 py-2 rounded mt-2">
-                    Save to Public Library
-                </button>
+
+                <div id="storyLoading" class="hidden flex items-center justify-center w-full mt-10">
+                    <sl-spinner style="font-size: 2rem;"></sl-spinner>
+                    <span class="ml-3 text-gray-600">Regenerating your story...</span>
+                </div>
+
+                <div id="storyContent">
+                    <h2 class="text-2xl font-semibold text-gray-800">Your Personalised Story:</h2>
+                    <div id="storyResult" class="bg-gray-50 p-4 mt-3 rounded-lg shadow-sm">
+                        <p id="storyText" class="text-gray-700"></p>
+                    </div>
+                    <button id="saveLibraryBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mt-6 flex items-center gap-2">
+                        <sl-icon name="bookmark-star"></sl-icon> Save to Public Library
+                    </button>
+                </div>
             </div> 
 
             <div id="storyEmptyState" class="text-center text-gray-500 italic mt-10 p-6 bg-white rounded-lg shadow">
-                <div class="text-5xl mb-3">🦄✨</div>
+                <div class="text-5xl mb-3"><sl-icon name="stars"></sl-icon></div>
                 <p>It's quiet here...<br>Go create something magical!</p>
-              </div>
+            </div>
               
         </sl-tab-panel>
 

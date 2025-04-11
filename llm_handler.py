@@ -21,8 +21,6 @@ STORIES_FILE = "data/all_stories.json"  # All generated stories
 LIBRARY_FILE = "data/library.json" # Public library of stories
 
 def generate_prompt(character, setting, feeling, length, extra):
-    # System-level guidance
-
     # --------------------------------------------------
     # --------------------------------------------------
     # --------------------------------------------------

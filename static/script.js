@@ -1,5 +1,8 @@
 let currentPrompt = "";
 let currentStory = "";
+let currentTitle = "";
+let currentCharacter = "";
+let currentSetting = "";
 let storyToDelete = null;
 let currentObserver = null;
 let allLibraryStories = [];
@@ -42,7 +45,8 @@ document.getElementById("storyForm").addEventListener("submit", function(event) 
 // Display generated story ----------------------------------------------------------------------------
 function displayGeneratedStory(data) {
     document.getElementById("loading").style.display = "none";
-    document.getElementById("storyContainer").classList.remove("hidden");
+    document.getElementById("storyLoading").classList.add("hidden");
+    document.getElementById("storyContent").classList.remove("hidden");
     document.getElementById("storyEmptyState").classList.add("hidden");
 
     document.getElementById("storyText").innerHTML = `
@@ -54,8 +58,10 @@ function displayGeneratedStory(data) {
     currentPrompt = data.user_prompt;
     currentStory = data.story;
     currentTitle = data.title;
+    currentCharacter = data.character;
+    currentSetting = data.setting;
 
-    document.getElementById("saveLibraryBtn").classList.remove("hidden");
+    document.getElementById("storyContainer").classList.remove("hidden");
     document.querySelector("sl-tab-group").show("generated-story");
 
     loadPastStories(); // Re-fetch
@@ -100,7 +106,7 @@ function renderPastStories(stories) {
     if (!stories.length) {
         pastStoriesDiv.innerHTML = `
             <div class="text-center text-gray-500 italic mt-6">
-                It’s quiet here… Go generate something magical! ✨
+                It’s quiet here… Go create something magical! ✨
             </div>
         `;
         return;
@@ -137,7 +143,7 @@ function renderLibraryStories(stories) {
     if (!stories.length) {
         libraryDiv.innerHTML = `
             <div class="text-center text-gray-500 italic mt-6">
-                It’s quiet here… Go generate something magical! ✨
+                It’s quiet here… Go create something magical! ✨
             </div>
         `;
         return;
@@ -193,6 +199,42 @@ cancelDeleteBtn.addEventListener("click", () => {
     deleteDialog.hide();
     storyToDelete = null; // optional: clear selected story
 });
+
+// Regenerate story ----------------------------------------------------------------------------
+document.getElementById("regenerateBtn").addEventListener("click", () => {
+    if (!currentPrompt) {
+      showAlert("warning", "No prompt available to regenerate the story.");
+      return;
+    }
+  
+    document.getElementById("storyContent").classList.add("hidden");
+    document.getElementById("storyLoading").classList.remove("hidden");
+    document.getElementById("regenerateBtn").classList.add("hidden");
+    document.getElementById("editBtn").classList.add("hidden");
+    document.getElementById("saveLibraryBtn").classList.add("hidden");
+     
+    fetch("/regenerate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ 
+        prompt: currentPrompt, 
+        character: currentCharacter, 
+        setting: currentSetting })
+    })
+      .then(response => response.json())
+      .then(data => {
+        displayGeneratedStory(data);
+    
+        document.getElementById("regenerateBtn").classList.remove("hidden");
+        document.getElementById("editBtn").classList.remove("hidden");
+        document.getElementById("saveLibraryBtn").classList.remove("hidden");
+      })
+      .catch(error => {
+        document.getElementById("storyLoading").classList.add("hidden");
+        showAlert("danger", "Error regenerating story: " + error);
+      });
+  });
+  
 
 // Tab switching and loading content ----------------------------------------------------------------------------
 document.querySelector("sl-tab-group").addEventListener("sl-tab-show", (event) => {
