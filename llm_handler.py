@@ -33,7 +33,7 @@ def generate_prompt(character, setting, feeling, length, extra):
         "You are a storytelling assistant that generates creative children's stories. "
         "Stories should be imaginative, emotionally engaging, appropriate and tailored for young readers. "
         "The story should contain a moral in concept, so that the children can learn something from it. "
-        "Do not explicitly label the moral, but make it clear at the end. Only answer with the story. Do not include humans. "
+        "Do not explicitly label the moral, but make it clear at the end. Only answer with the story. Do not include humans. Use simple language that will be understandable for children under 11 years old. "
         f"Generate a **{length}** story, where the main character is a {character}, the story takes place in a {setting}, and the character is feeling {feeling}. Additional information: {extra}."
     )
 

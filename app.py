@@ -115,6 +115,22 @@ def regenerate():
         "setting": setting
     })
 
+@app.route("/save-to-past", methods=["POST"])
+def save_to_past():
+    data = request.get_json()
+    prompt = data.get("prompt", "")
+    story = data.get("story", "")
+    title = data.get("title", "")
+    edited = data.get("edited", False)
+
+    from llm_handler import save_story
+
+    # Mark edited stories with a flag
+    if edited and prompt and story:
+        prompt += " (Edited by user)"
+
+    save_story(prompt, story, title)
+    return jsonify({"message": "Edited story saved to past stories!"})
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=8080)

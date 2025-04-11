@@ -111,13 +111,26 @@
         <!----------------- TAB 2 ----------------->
         <sl-tab-panel name="generated-story">
             <div id="storyContainer" class="bg-white shadow-lg rounded-lg p-6 w-full max-w-2xl mt-6 hidden">
-                <div class="flex justify-end gap-3 mb-4">
-                    <button id="regenerateBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm flex items-center gap-2">
-                      <sl-icon name="arrow-repeat"></sl-icon> Regenerate
-                    </button>
-                    <button id="editBtn" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded text-sm flex items-center gap-2">
-                      <sl-icon name="pencil"></sl-icon> Edit
-                    </button>
+                
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
+                    <h2 class="text-2xl font-semibold text-gray-800">Your Personalised Story:</h2>
+                
+                    <div class="flex flex-col-reverse sm:flex-row-reverse gap-2 sm:gap-3 items-start sm:items-center">
+                        <button id="saveEditedStoryBtn"
+                          class="hidden bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded text-sm flex items-center gap-2 justify-center w-full sm:w-auto">
+                          <sl-icon name="save"></sl-icon> Save Story
+                        </button>
+                    
+                        <button id="regenerateBtn"
+                          class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm flex items-center gap-2">
+                          <sl-icon name="arrow-repeat"></sl-icon> Regenerate
+                        </button>
+                    
+                        <button id="editBtn"
+                          class="bg-slate-600 hover:bg-slate-700 text-white px-4 py-2 rounded text-sm flex items-center gap-2">
+                          <sl-icon name="pencil"></sl-icon> Edit
+                        </button>
+                      </div>
                 </div>
 
                 <div id="storyLoading" class="hidden flex items-center justify-center w-full mt-10">
@@ -126,10 +139,14 @@
                 </div>
 
                 <div id="storyContent">
-                    <h2 class="text-2xl font-semibold text-gray-800">Your Personalised Story:</h2>
                     <div id="storyResult" class="bg-gray-50 p-4 mt-3 rounded-lg shadow-sm">
-                        <p id="storyText" class="text-gray-700"></p>
+                        <p id="storyDisplayText" class="text-gray-700"></p>                        
+                        <textarea id="storyEditText" 
+                            class="w-full mt-2 p-3 border rounded text-gray-800 font-normal hidden" 
+                            rows="17">
+                        </textarea>
                     </div>
+
                     <button id="saveLibraryBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mt-6 flex items-center gap-2">
                         <sl-icon name="bookmark-star"></sl-icon> Save to Public Library
                     </button>

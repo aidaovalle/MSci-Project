@@ -5,6 +5,7 @@ let currentCharacter = "";
 let currentSetting = "";
 let storyToDelete = null;
 let currentObserver = null;
+let isEditing = false;
 let allLibraryStories = [];
 let allPastStories = [];
 
@@ -49,12 +50,12 @@ function displayGeneratedStory(data) {
     document.getElementById("storyContent").classList.remove("hidden");
     document.getElementById("storyEmptyState").classList.add("hidden");
 
-    document.getElementById("storyText").innerHTML = `
+    document.getElementById("storyDisplayText").innerHTML = `
         <h3 class="text-xl font-semibold mb-2">${data.title}</h3>
         <p><strong>Story Details:</strong><br>${data.user_prompt}</p>
-        <p class="mt-2"><strong>Story:</strong><br>${data.story}</p>
-    `;
-
+        <div class="mt-2"><strong>Story:</strong><br>${formatStoryAsParagraphs(data.story)}</div>
+  `;
+  
     currentPrompt = data.user_prompt;
     currentStory = data.story;
     currentTitle = data.title;
@@ -67,12 +68,24 @@ function displayGeneratedStory(data) {
     loadPastStories(); // Re-fetch
 }
 
+// Format story as paragraphs ----------------------------------------------------------------------------
+function formatStoryAsParagraphs(story) {
+    return story
+    .split(/\n\s*\n/) // Split by double newlines or blank lines
+    .map(p => `<p class="mb-3">${p.trim()}</p>`)
+    .join("");
+}
+
 // Save story to library ----------------------------------------------------------------------------
 document.getElementById("saveLibraryBtn").addEventListener("click", function() {
     fetch("/save-to-library", {
         method: "POST",
         headers: { "Content-Type": "application/json"},
-        body: JSON.stringify({ prompt: currentPrompt, story: currentStory, title: currentTitle })
+        body: JSON.stringify({ 
+            prompt: currentPrompt, 
+            story: currentStory, 
+            title: currentTitle 
+        })
     })
         .then(response => response.json())
         .then(data => {
@@ -118,7 +131,7 @@ function renderPastStories(stories) {
         storyElement.innerHTML = `
             <h3 class="text-xl font-semibold mb-2">${story.title || "Untitled Story"}</h3>
             <p><strong>Story Details:</strong><br>${story.prompt}</p>
-            <p class="mt-2"><strong>Story:</strong><br>${story.story}</p>
+            <div class="mt-2"><strong>Story:</strong><br>${formatStoryAsParagraphs(story.story)}</div>
         `;
         
         pastStoriesDiv.appendChild(storyElement);
@@ -212,6 +225,7 @@ document.getElementById("regenerateBtn").addEventListener("click", () => {
     document.getElementById("regenerateBtn").classList.add("hidden");
     document.getElementById("editBtn").classList.add("hidden");
     document.getElementById("saveLibraryBtn").classList.add("hidden");
+    document.getElementById("saveEditedStoryBtn").classList.add("hidden");
      
     fetch("/regenerate", {
       method: "POST",
@@ -233,9 +247,64 @@ document.getElementById("regenerateBtn").addEventListener("click", () => {
         document.getElementById("storyLoading").classList.add("hidden");
         showAlert("danger", "Error regenerating story: " + error);
       });
+});
+  
+// Edit story ----------------------------------------------------------------------------
+document.getElementById("editBtn").addEventListener("click", () => {
+    const editBtn = document.getElementById("editBtn");
+    const displayText = document.getElementById("storyDisplayText");
+    const editText = document.getElementById("storyEditText");
+    const saveEditedBtn = document.getElementById("saveEditedStoryBtn");
+  
+    if (!isEditing) {
+      // Switch to edit mode
+      editText.value = currentStory;
+      displayText.classList.add("hidden");
+      editText.classList.remove("hidden");
+      editBtn.innerHTML = `<sl-icon name="check-circle"></sl-icon> Save Changes`;
+      isEditing = true;
+    } else {
+      // Save edits
+      currentStory = editText.value.trim();
+      displayText.innerHTML = `
+      <h3 class="text-xl font-semibold mb-2">${currentTitle}</h3>
+      <p><strong>Story Details:</strong><br>${currentPrompt}</p>
+      <p class="mt-2"><strong>Story:</strong><br>${currentStory}</p>
+    `;
+      displayText.classList.remove("hidden");
+      editText.classList.add("hidden");
+      editBtn.innerHTML = `<sl-icon name="pencil"></sl-icon> Edit Story`;
+      isEditing = false;
+
+      saveEditedBtn.classList.remove("hidden");
+  
+      showAlert("success", "Story updated! Don't forget to save it.");
+    }
+  });
+
+  // Save edited story ----------------------------------------------------------------------------
+  document.getElementById("saveEditedStoryBtn").addEventListener("click", () => {
+    fetch("/save-to-past", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        prompt: currentPrompt,
+        story: currentStory,
+        title: currentTitle,
+        edited: true
+      })
+    })
+      .then(res => res.json())
+      .then(data => {
+        showAlert("success", data.message || "Edited story saved!");
+        document.getElementById("saveEditedStoryBtn").classList.add("hidden");
+        loadPastStories();
+      })
+      .catch(err => {
+        showAlert("danger", "Failed to save edited story.");
+      });
   });
   
-
 // Tab switching and loading content ----------------------------------------------------------------------------
 document.querySelector("sl-tab-group").addEventListener("sl-tab-show", (event) => {
     const activeTab = event.detail.name;
