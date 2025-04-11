@@ -397,7 +397,7 @@ function handleBackToTop(tabName) {
     if (currentObserver) currentObserver.disconnect();
     backToTopBtn.classList.add("hidden");
 
-    if (!["library", "past-stories"].includes(tabName)) return;
+    if (!["library", "past-stories", "generated-story"].includes(tabName)) return;
 
     const tabPanel = document.querySelector(`sl-tab-panel[name="${tabName}"]`);
 
