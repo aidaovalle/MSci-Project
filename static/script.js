@@ -66,6 +66,24 @@ function displayGeneratedStory(data) {
     document.querySelector("sl-tab-group").show("generated-story");
 
     loadPastStories(); // Re-fetch
+
+    fetch("/generate-title", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ story: data.story })
+      })
+        .then(res => res.json())
+        .then(titleData => {
+          if (titleData.title) {
+            currentTitle = titleData.title;
+            const titleElement = document.querySelector("#storyDisplayText h3");
+            if (titleElement) titleElement.textContent = titleData.title;
+          }
+        })
+        .catch(err => {
+          console.warn("Failed to generate dynamic title:", err);
+        });
+      
 }
 
 // Format story as paragraphs ----------------------------------------------------------------------------

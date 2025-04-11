@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-from llm_handler import generate_story, load_stories, generate_prompt
+from llm_handler import generate_story, load_stories, generate_prompt, generate_title_from_story, save_story
 
 app = Flask(__name__)
 
@@ -19,29 +19,28 @@ def generate():
     feeling = request.form.get("feeling", "").strip()
     extra = request.form.get("extra", "").strip()
     length = request.form.get("length", "").strip()
-    title = generate_title(character, setting)
 
     # Get both prompts
     system_prompt, user_prompt = generate_prompt(character, setting, feeling, length, extra)
 
-    # print("Prompt sent to Gemini:", system_prompt)
-    # print("Prompt shown to user:", user_prompt)
-
     # Generate story using only the system prompt
     story = generate_story(system_prompt)
+
+    title = generate_title_from_story(story)
 
     # Save only the user prompt
     from llm_handler import save_story
 
     save_story(user_prompt, story, title)
 
-    return jsonify(
-        {"message": "Story generated", "user_prompt": user_prompt, "story": story, "title": title, "character": character, "setting": setting}
-    )
-
-def generate_title(character, setting):
-    return f"The {character.capitalize()} in the {setting.capitalize()}"
-
+    return jsonify({
+        "message": "Story generated",
+        "user_prompt": user_prompt,
+        "story": story,
+        "title": title,
+        "character": character,
+        "setting": setting
+    })
 
 @app.route("/get-stories", methods=["GET"])
 def get_stories():
@@ -101,13 +100,14 @@ def regenerate():
 
     # Rebuild the full system prompt using the stored user_prompt
     story = generate_story(f"Use the following user prompt to generate a new story: {user_prompt}")
-    title = generate_title(character, setting)
+    
+    title = generate_title_from_story(story)
 
     from llm_handler import save_story
     save_story(user_prompt, story, title)
     
     return jsonify({
-        "message": "Story regenerated",
+        "message": "Story generated",
         "user_prompt": user_prompt,
         "story": story,
         "title": title,
@@ -131,6 +131,19 @@ def save_to_past():
 
     save_story(prompt, story, title)
     return jsonify({"message": "Edited story saved to past stories!"})
+
+@app.route("/generate-title", methods=["POST"])
+def generate_title_from_story_route():
+    data = request.get_json()
+    story = data.get("story", "")
+
+    if not story:
+        return jsonify({"error": "Story content is required to generate title."}), 400
+
+    from llm_handler import generate_title_from_story
+
+    title = generate_title_from_story(story)
+    return jsonify({"title": title})
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=8080)

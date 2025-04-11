@@ -98,3 +98,20 @@ def delete_from_library(prompt, story):
 
     with open(LIBRARY_FILE, "w") as file:
         json.dump(library, file, indent=4)
+
+def generate_title_from_story(story):
+    # Generate title based on story
+    title_prompt = (
+        "You're a creative children's book author. "
+        "Based on the following story, generate a fun, whimsical, poetic, and eye-catching title. "
+        "The title should be understandable for kids, appropriate and should spark curiosity. Only return the title.\n\n"
+        f"Story:\n{story}"
+    )
+    
+    try:
+        title = generate_story(title_prompt).strip()                
+        return title.split("\n")[0]
+        
+    except Exception as e:
+        return f"Error generating title: {str(e)}"
+    
