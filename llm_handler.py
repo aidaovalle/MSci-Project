@@ -21,14 +21,7 @@ STORIES_FILE = "data/all_stories.json"  # All generated stories
 LIBRARY_FILE = "data/library.json" # Public library of stories
 
 def generate_prompt(character, setting, feeling, length, extra):
-    # --------------------------------------------------
-    # --------------------------------------------------
-    # --------------------------------------------------
-    # HOW DO I CHECK IF THE PREVIOUS PROMPTS ARE DELETED? SOMETIMES I SEE COMMON THINGS IN A STORY, FROM PREVIOUS PROMPTS....
-    # --------------------------------------------------
-    # --------------------------------------------------
-    # --------------------------------------------------
-    
+        
     system_prompt = (
         "You are a storytelling assistant that generates creative children's stories. "
         "Stories should be imaginative, emotionally engaging, appropriate and tailored for young readers. "
@@ -103,7 +96,7 @@ def generate_title_from_story(story):
     # Generate title based on story
     title_prompt = (
         "You're a creative children's book author. "
-        "Based on the following story, generate a fun, whimsical, poetic, and eye-catching title. "
+        "Based on the following story, generate a fun, whimsical, poetic, and eye-catching title that is not too long and is easy to read. "
         "The title should be understandable for kids, appropriate and should spark curiosity. Only return the title.\n\n"
         f"Story:\n{story}"
     )

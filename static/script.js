@@ -112,7 +112,7 @@ document.getElementById("saveLibraryBtn").addEventListener("click", function() {
                 loadLibraryStories();
                 document.querySelector('sl-tab-group').show('library');
             }
-            // else, stay on generated-story tab
+            // Else, stay on generated-story tab
         })        
         .catch(error => {
             showAlert("danger", "Error saving to library: " + error);
@@ -124,7 +124,7 @@ function loadPastStories() {
     return fetch("/get-stories")
         .then(response => response.json())
         .then(stories => {
-            allPastStories = stories; // save globally
+            allPastStories = stories; // Save globally
             renderPastStories(stories); // Always render
         });
 }
@@ -132,7 +132,7 @@ function loadPastStories() {
 // Showing past stories ----------------------------------------------------------------------------
 function renderPastStories(stories) {
     const pastStoriesDiv = document.getElementById("pastStories");
-    pastStoriesDiv.innerHTML = ""; // clear existing content
+    pastStoriesDiv.innerHTML = ""; // Clear existing content
 
     if (!stories.length) {
         pastStoriesDiv.innerHTML = `
@@ -169,7 +169,7 @@ function loadLibraryStories() {
 // Showing library data ----------------------------------------------------------------------------
 function renderLibraryStories(stories) {
     const libraryDiv = document.getElementById("libraryStories");
-    libraryDiv.innerHTML = ""; // clear previous stories
+    libraryDiv.innerHTML = ""; // Clear previous stories
 
     if (!stories.length) {
         libraryDiv.innerHTML = `
@@ -228,7 +228,7 @@ confirmDeleteBtn.addEventListener("click", () => {
 
 cancelDeleteBtn.addEventListener("click", () => {
     deleteDialog.hide();
-    storyToDelete = null; // optional: clear selected story
+    storyToDelete = null;
 });
 
 // Regenerate story ----------------------------------------------------------------------------
